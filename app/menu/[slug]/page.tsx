@@ -10,7 +10,7 @@ import { ArrowLeft } from "lucide-react";
 export const revalidate = 60; // Revalidate every minute
 
 export async function generateStaticParams() {
-  const slugs: { slug: string }[] = await client.fetch(GET_ALL_SLUGS);
+  const slugs = (await client.fetch(GET_ALL_SLUGS)) as { slug: string }[];
   return slugs.map((s) => ({
     slug: s.slug,
   }));
@@ -21,9 +21,9 @@ interface PageProps {
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const product: SanityProduct | null = await client.fetch(GET_PRODUCT_BY_SLUG, {
+  const product = (await client.fetch(GET_PRODUCT_BY_SLUG, {
     slug: params.slug,
-  });
+  })) as SanityProduct | null;
 
   if (!product) {
     notFound();

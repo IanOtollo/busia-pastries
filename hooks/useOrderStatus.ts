@@ -3,24 +3,34 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { OrderStatus, PaymentStatus } from "@/types/product";
 
-interface OrderStatusData {
+interface OrderItem {
+  productName: string;
+  quantity: number;
+  unitPriceKes: number;
+}
+
+interface OrderData {
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   updatedAt: string;
+  totalKes: number;
+  guestName: string;
+  guestPhone: string;
+  deliveryAddress: string | null;
+  items: OrderItem[];
 }
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 export function useOrderStatus(orderId: string, token: string) {
-  const [data, setData] = useState<OrderStatusData | null>(null);
+  const [order, setOrder] = useState<OrderData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!orderId || !token) return;
 
-    // Initial fetch
     const fetchStatus = async () => {
       try {
         const res = await fetch(
@@ -28,7 +38,7 @@ export function useOrderStatus(orderId: string, token: string) {
         );
         if (!res.ok) throw new Error("Order not found");
         const json = await res.json();
-        if (json.success) setData(json.data);
+        if (json.success) setOrder(json.data as OrderData);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -59,11 +69,11 @@ export function useOrderStatus(orderId: string, token: string) {
             paymentStatus: PaymentStatus;
             updatedAt: string;
           };
-          setData({
-            status: updated.status,
-            paymentStatus: updated.paymentStatus,
-            updatedAt: updated.updatedAt,
-          });
+          setOrder((prev) =>
+            prev
+              ? { ...prev, status: updated.status, paymentStatus: updated.paymentStatus, updatedAt: updated.updatedAt }
+              : prev
+          );
         }
       )
       .subscribe();
@@ -73,5 +83,5 @@ export function useOrderStatus(orderId: string, token: string) {
     };
   }, [orderId, token]);
 
-  return { data, isLoading, error };
+  return { status: order?.status ?? null, order, isLoading, error };
 }

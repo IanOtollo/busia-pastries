@@ -7,7 +7,7 @@ import { SanityProduct } from "@/types/product";
 export const revalidate = 60; // Revalidate every minute
 
 export default async function MenuPage() {
-  const products: SanityProduct[] = await client.fetch(GET_ALL_PRODUCTS);
+  const products = (await client.fetch(GET_ALL_PRODUCTS)) as SanityProduct[];
 
   return (
     <div className="min-h-screen pt-32 pb-24">

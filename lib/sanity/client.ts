@@ -41,15 +41,17 @@ const MOCK_PRODUCTS = [
 ];
 
 export const sanityClient = {
-  fetch: async (query: string, params?: Record<string, any>) => {
+  fetch: async (query: string, params?: Record<string, unknown>): Promise<unknown> => {
     if (query.includes("slug.current == $slug")) {
-      return MOCK_PRODUCTS.find(p => p.slug === params?.slug) || null;
+      return MOCK_PRODUCTS.find(p => p.slug === (params as Record<string, string>)?.slug) || null;
     }
-    if (query.includes("\"slug\": slug.current")) {
+    // Only match if the query is specifically for slugs (as in GET_ALL_SLUGS)
+    // and NOT for the full product card (as in GET_ALL_PRODUCTS)
+    if (query.includes('"slug": slug.current') && !query.includes('name,')) {
       return MOCK_PRODUCTS.map(p => ({ slug: p.slug }));
     }
     return MOCK_PRODUCTS;
   }
-} as any;
+};
 
 export const client = sanityClient;

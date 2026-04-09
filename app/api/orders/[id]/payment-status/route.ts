@@ -9,8 +9,21 @@ export async function GET(
     const order = await prisma.order.findUnique({
       where: { id: params.id },
       select: {
-        paymentStatus: true,
+        id: true,
         status: true,
+        paymentStatus: true,
+        updatedAt: true,
+        totalKes: true,
+        guestName: true,
+        guestPhone: true,
+        deliveryAddress: true,
+        items: {
+          select: {
+            productName: true,
+            quantity: true,
+            unitPriceKes: true,
+          },
+        },
       },
     });
 
@@ -21,16 +34,19 @@ export async function GET(
       );
     }
 
-    // Map database payment status to what the client expects
-    let clientStatus = "PENDING";
-    if (order.paymentStatus === "PAID") {
-      clientStatus = "COMPLETED";
-    }
 
     return NextResponse.json({
       success: true,
-      status: clientStatus,
-      orderStatus: order.status,
+      data: {
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        updatedAt: order.updatedAt,
+        totalKes: order.totalKes,
+        guestName: order.guestName,
+        guestPhone: order.guestPhone,
+        deliveryAddress: order.deliveryAddress,
+        items: order.items,
+      },
     });
   } catch (error) {
     console.error("Error fetching payment status:", error);

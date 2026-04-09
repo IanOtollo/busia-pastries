@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ChevronDown, ArrowRight, Sparkles, Clock, MapPin } from "lucide-react";
+import { ArrowRight, Sparkles, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useSeasonalTheme } from "@/hooks/useSeasonalTheme";
 
@@ -88,7 +88,7 @@ export function Hero() {
             transition={{ delay: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
-            <Button size="xl" className="w-full sm:w-auto shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.3)] hover:shadow-none transition-all group px-10">
+            <Button size="lg" className="w-full sm:w-auto shadow-[0_20px_50px_rgba(var(--color-accent-rgb),0.3)] hover:shadow-none transition-all group px-10">
               <span className="relative z-10 flex items-center gap-3">
                 Order Your Pastries
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />

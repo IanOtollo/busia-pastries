@@ -19,7 +19,7 @@ interface StepMixProps {
 }
 
 export function StepMix({ onNext, data }: StepMixProps) {
-  const [fulfillment, setFulfillment] = React.useState(data.fulfillment || "DELIVERY");
+  const [fulfillment, setFulfillment] = React.useState<"DELIVERY" | "PICKUP">((data.fulfillment as "DELIVERY" | "PICKUP") || "DELIVERY");
   const [address, setAddress] = React.useState(data.deliveryAddress || "");
   const [notes, setNotes] = React.useState(data.notes || "");
 

@@ -3,14 +3,10 @@ import { StarRating } from "./StarRating";
 import { Badge } from "@/components/ui/Badge";
 import { CheckCircle2 } from "lucide-react";
 
+import { Review } from "@/types/product";
+
 interface ReviewCardProps {
-  review: {
-    userName: string;
-    rating: number;
-    date: string;
-    body: string;
-    verified: boolean;
-  };
+  review: Review;
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {
@@ -19,14 +15,14 @@ export function ReviewCard({ review }: ReviewCardProps) {
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-accent)] font-bold text-sm">
-             {review.userName?.charAt(0) || "U"}
+             {review.user?.name?.charAt(0) || "U"}
           </div>
           <div>
-            <h4 className="font-bold text-sm text-[var(--color-text)]">{review.userName || "Customer"}</h4>
-            <p className="text-[10px] text-[var(--color-muted)]">{review.date}</p>
+            <h4 className="font-bold text-sm text-[var(--color-text)]">{review.user?.name || "Customer"}</h4>
+            <p className="text-[10px] text-[var(--color-muted)]">{new Date(review.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
-        {review.verified && (
+        {review.isVerified && (
           <Badge variant="success" className="bg-emerald-50 text-emerald-700 border-emerald-100 flex items-center gap-1">
              <CheckCircle2 className="w-2.5 h-2.5" />
              Verified

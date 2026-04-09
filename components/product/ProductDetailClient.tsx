@@ -4,8 +4,7 @@ import Image from "next/image";
 import { StarRating } from "@/components/product/StarRating";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ShoppingCart, Heart, Share2, ArrowLeft, Clock, ShieldCheck, Info } from "lucide-react";
-import Link from "next/link";
+import { ShoppingCart, Heart, Share2, Clock, ShieldCheck, Info } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useCurrency } from "@/hooks/useCurrency";
 import { formatPrice } from "@/lib/utils/currency";
@@ -124,7 +123,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <p className="text-[var(--color-text)]/80 text-xl leading-relaxed font-medium">
              {product.description}
           </p>
-          {product.richDescription && (
+          {!!product.richDescription && (
              <div className="prose prose-invert max-w-none text-[var(--color-muted)] lg:text-lg">
                 {/* Render PortableText if library available, else just a fallback */}
                 <p>Meticulously prepared following traditional French techniques infused with local Busia flavors.</p>

@@ -100,7 +100,7 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
                </div>
                <h3 className="text-2xl font-display font-bold text-[var(--color-text)]">No matches found</h3>
                <p className="text-[var(--color-muted)] max-w-xs">
-                 We couldn't find any pastries matching "{searchQuery}". Try a different search term or category.
+                 We couldn&apos;t find any pastries matching &quot;{searchQuery}&quot;. Try a different search term or category.
                </p>
             </motion.div>
           )}

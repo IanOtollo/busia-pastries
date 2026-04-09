@@ -10,7 +10,7 @@ import { SanityProduct } from "@/types/product";
 export const revalidate = 120; // Revalidate every 2 minutes (ISR)
 
 export default async function Home() {
-  const featuredProducts: SanityProduct[] = await sanityClient.fetch(GET_FEATURED_PRODUCTS);
+  const featuredProducts = (await sanityClient.fetch(GET_FEATURED_PRODUCTS)) as SanityProduct[];
 
   return (
     <div className="flex flex-col min-h-screen">
