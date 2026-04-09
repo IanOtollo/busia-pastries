@@ -14,9 +14,6 @@ export async function POST(req: Request) {
     }
 
     // 1. Generate Access Token (Simulated for sandbox)
-    const consumerKey = process.env.MPESA_CONSUMER_KEY;
-    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
-    
     // In real implementation, call: https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials
 
     // 2. Initiate STK Push
@@ -42,8 +39,9 @@ export async function POST(req: Request) {
       message: "STK Push initiated successfully" 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("M-Pesa API Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 }

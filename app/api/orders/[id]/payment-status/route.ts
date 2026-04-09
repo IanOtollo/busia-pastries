@@ -16,7 +16,7 @@ export async function GET(
         totalKes: true,
         guestName: true,
         guestPhone: true,
-        deliveryAddress: true,
+        deliveryArea: true,
         items: {
           select: {
             productName: true,
@@ -44,7 +44,7 @@ export async function GET(
         totalKes: order.totalKes,
         guestName: order.guestName,
         guestPhone: order.guestPhone,
-        deliveryAddress: order.deliveryAddress,
+        deliveryArea: order.deliveryArea,
         items: order.items,
       },
     });

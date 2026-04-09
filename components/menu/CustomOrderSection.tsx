@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { CheckCircle2, Loader2, Calendar, Phone, MapPin, Cake } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 import toast from "react-hot-toast";
 
 const customOrderSchema = z.object({
@@ -15,7 +16,7 @@ const customOrderSchema = z.object({
   occasion: z.string().min(1, "Please select an occasion"),
   type: z.string().min(3, "Please describe the pastry type"),
   flavors: z.string().optional(),
-  servings: z.coerce.number().min(1, "Minimum 1 serving"),
+  servings: z.number().min(1, "Minimum 1 serving"),
   preferredDate: z.string().min(1, "Preferred date is required"),
   fulfillment: z.enum(["DELIVERY", "PICKUP"]),
   location: z.string().optional(),

@@ -11,16 +11,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 export default async function OrderPage({ params }: { params: { id: string } }) {
   // Fetch initial order state server-side
-  let order: any = null;
-  
-  try {
-    order = await prisma.order.findUnique({
-      where: { id: params.id },
-      include: { items: true },
-    });
-  } catch (error) {
-    console.error("Order fetch error:", error);
-  }
+  const order = await prisma.order.findUnique({
+    where: { id: params.id },
+    include: { items: true },
+  });
 
   if (!order) {
     return (
@@ -33,5 +27,22 @@ export default async function OrderPage({ params }: { params: { id: string } }) 
     );
   }
 
-  return <OrderTrackingClient initialOrder={order} />;
+  // Type transformation to match Client props and resolve Prisma nullability
+  const formattedOrder = {
+    id: order.id,
+    status: order.status,
+    fulfillment: order.fulfillment,
+    deliveryArea: order.deliveryArea ?? undefined,
+    deliveryLandmark: order.deliveryLandmark ?? undefined,
+    guestName: order.guestName ?? undefined,
+    guestPhone: order.guestPhone ?? undefined,
+    totalKes: order.totalKes,
+    items: order.items.map(item => ({
+      productName: item.productName,
+      quantity: item.quantity,
+      unitPriceKes: item.unitPriceKes
+    }))
+  };
+
+  return <OrderTrackingClient initialOrder={formattedOrder} />;
 }

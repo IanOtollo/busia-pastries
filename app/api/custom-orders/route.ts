@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/client";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -28,6 +26,7 @@ export async function POST(req: Request) {
 
     // 2. Notify Michael via Email (Resend)
     if (process.env.RESEND_API_KEY) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: "Busia Pastries <orders@busiapastries.co.ke>", // Requires verified domain
         to: "michael@busiapastries.co.ke", // Michael's email from spec
@@ -48,8 +47,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, data: customOrder });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Custom Order API Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 }

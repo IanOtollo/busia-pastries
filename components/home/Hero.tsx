@@ -9,13 +9,16 @@ import { useSeason } from "@/components/providers/SeasonalProvider";
 export function Hero() {
   const { season } = useSeason();
 
-  const seasonalText = {
+  const seasonalText: Record<string, string> = {
     valentine: "NOW BAKING FOR THE SEASON OF LOVE",
     halloween: "SPOOKY GOODNESS IN EVERY BITE",
     christmas: "FESTIVE BAKES FOR THE HOLIDAYS",
     newyear: "START THE YEAR WITH FRESHNESS",
+    easter: "FRESH BAKES FOR EASTER CELEBRATIONS",
     default: "BAKED IN BUSIA. BAKED WITH LOVE.",
-  }[season] || "BAKED IN BUSIA. BAKED WITH LOVE.";
+  };
+
+  const text = seasonalText[season] || seasonalText.default;
 
   return (
     <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-bp-bg hero-grain hero-pattern pt-20">
@@ -38,7 +41,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-block font-mono text-xs font-bold tracking-[0.3em] text-bp-accent uppercase"
           >
-            {seasonalText}
+            {text}
           </motion.span>
 
           {/* Main Headline */}

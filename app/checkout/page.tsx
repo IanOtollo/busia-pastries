@@ -18,7 +18,7 @@ export type FulfillmentMode = "DELIVERY" | "PICKUP";
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCart();
-  const { currency, formatPrice } = useCurrency();
+  const { currency } = useCurrency();
   const [step, setStep] = useState(1);
   const [mounted, setMounted] = useState(false);
 

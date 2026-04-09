@@ -5,8 +5,10 @@ import { useCart } from "@/store/useCart";
 import { useCurrency } from "@/store/useCurrency";
 import { ArrowLeft, CheckCircle2, ShoppingBag, Truck, MapPin, User } from "lucide-react";
 
+import { CheckoutFormData } from "@/types/checkout";
+
 interface StepSummaryProps {
-  data: any;
+  data: CheckoutFormData;
   onNext: () => void;
   onBack: () => void;
 }

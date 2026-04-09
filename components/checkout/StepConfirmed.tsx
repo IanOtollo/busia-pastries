@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import { CheckCircle2, ArrowRight, Package, Truck, Smartphone } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 
+import { CheckoutFormData } from "@/types/checkout";
+
 interface StepConfirmedProps {
   orderId: string;
-  data: any;
+  data: CheckoutFormData;
   onFinish: () => void;
 }
 

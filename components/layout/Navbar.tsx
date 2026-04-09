@@ -72,7 +72,7 @@ export function Navbar() {
                 {["KES", "UGX"].map((c) => (
                   <button
                     key={c}
-                    onClick={() => setCurrency(c as any)}
+                    onClick={() => setCurrency(c as "KES" | "UGX")}
                     className={cn(
                       "px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest transition-all",
                       currency === c ? "bg-bp-cta text-bp-cta-text shadow-sm" : "text-bp-text-muted hover:text-bp-text"
@@ -144,7 +144,7 @@ export function Navbar() {
                     {["KES", "UGX"].map((c) => (
                       <button
                         key={c}
-                        onClick={() => setCurrency(c as any)}
+                        onClick={() => setCurrency(c as "KES" | "UGX")}
                         className={cn(
                           "px-6 py-3 rounded-xl text-xs font-bold transition-all border",
                           currency === c ? "bg-bp-cta border-bp-cta text-bp-cta-text" : "bg-bp-surface border-bp-border text-bp-text-muted"

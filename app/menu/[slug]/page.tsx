@@ -20,23 +20,41 @@ const PRODUCT_QUERY = `*[_type == "product" && slug.current == $slug][0] {
   }
 }`;
 
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  priceKes: number;
+  inStock: boolean;
+  images: Array<{ asset: { url: string }, alt?: string }>;
+  ingredients?: string[];
+  allergens?: string[];
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product: any = await sanityFetch({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+  const product = await sanityFetch<Product | null>({ query: PRODUCT_QUERY, params: { slug: params.slug } });
   
-  if (!product) {
+  // Handle empty array or null (Zero Mock Data Policy)
+  if (!product || (Array.isArray(product) && product.length === 0)) {
     return { title: "Product Not Found | Busia Pastries" };
   }
 
+  // Safe cast since we checked for empty array
+  const p = product as Product;
+
   return {
-    title: `${product.name} | Busia Pastries`,
-    description: product.description,
+    title: `${p.name} | Busia Pastries`,
+    description: p.description,
   };
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const product: any = await sanityFetch({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+  const result = await sanityFetch<Product | null>({ query: PRODUCT_QUERY, params: { slug: params.slug } });
 
-  if (!product) {
+  // Handle empty array or null
+  if (!result || (Array.isArray(result) && result.length === 0)) {
     return (
        <div className="min-h-screen pt-40 pb-20 text-center">
           <div className="container mx-auto px-4">
@@ -46,6 +64,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
        </div>
     );
   }
+
+  const product = result as Product;
 
   return <ProductDetailClient product={product} />;
 }

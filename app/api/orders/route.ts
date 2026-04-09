@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         status: "PENDING",
         paymentStatus: "UNPAID",
         items: {
-          create: items.map((item: any) => ({
+          create: items.map((item: { sanityId: string, productName: string, quantity: number, unitPriceKes: number }) => ({
             sanityId: item.sanityId,
             productName: item.productName,
             quantity: item.quantity,
@@ -59,8 +59,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, data: order });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Order Creation Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 }

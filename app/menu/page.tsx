@@ -21,23 +21,38 @@ export const metadata = {
   description: "Browse our hand-crafted artisan pastries, cakes, and breads. Freshly baked in Busia.",
 };
 
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  priceKes: number;
+  inStock: boolean;
+  mainImage?: { asset: { url: string }; alt?: string };
+}
+
 export default async function MenuPage() {
-  const products: any = await sanityFetch({ query: ALL_PRODUCTS_QUERY });
+  const result = await sanityFetch<Product[]>({ query: ALL_PRODUCTS_QUERY });
+  
+  // Ensure we pass an array to MenuClient, even if empty (Zero Mock Data Policy)
+  const products = Array.isArray(result) ? result : [];
 
   return (
      <div className="min-h-screen pt-32 pb-24">
         <div className="container mx-auto px-4 md:px-6">
            {/* Page Header */}
-           <div className="max-w-3xl mb-16 space-y-4">
-              <h1 className="font-display text-5xl md:text-7xl font-bold text-bp-text leading-none">
-                 The <span className="text-bp-accent">Menu.</span>
+           <div className="max-w-4xl mx-auto text-center space-y-4 mb-20">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-bp-accent">Daily Selection</span>
+              <h1 className="font-display text-6xl md:text-8xl font-bold text-bp-text leading-none">
+                 The <span className="text-bp-accent italic">Bakeshop.</span>
               </h1>
-              <p className="text-bp-text-muted text-lg md:text-xl font-body leading-relaxed max-w-2xl">
-                 Hand-crafted daily in Busia with the finest local ingredients. Explore our artisanal selection of pastries and cakes.
+              <p className="text-bp-text-muted max-w-lg mx-auto leading-relaxed">
+                 Explore our daily collection of artisan pastries, custom cakes, and traditional breads.
               </p>
            </div>
 
-           <MenuClient initialProducts={products} />
+           <MenuClient initialProducts={products as Product[]} />
         </div>
      </div>
   );

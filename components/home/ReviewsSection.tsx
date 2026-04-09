@@ -20,6 +20,11 @@ export async function ReviewsSection() {
   let reviews: ReviewWithUser[] = [];
   
   try {
+    if (!process.env.DATABASE_URL) {
+      console.warn("DATABASE_URL not found. Skipping reviews fetch.");
+      return null;
+    }
+    
     reviews = await prisma.review.findMany({
       where: { isApproved: true },
       include: { user: { select: { name: true } } },

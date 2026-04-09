@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Smartphone, Banknote, Loader2, CheckCircle2, ChevronRight, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import toast from "react-hot-toast";
+import { CheckoutFormData } from "@/types/checkout";
 
 interface StepPaymentProps {
-  data: any;
+  data: CheckoutFormData;
   orderId: string;
   onNext: () => void;
 }
@@ -27,17 +28,17 @@ export function StepPayment({ data, orderId, onNext }: StepPaymentProps) {
         body: JSON.stringify({ orderId, phone: data.phone }),
       });
       
-      const resData = await res.json();
+      const resData = (await res.json()) as { success: boolean; error?: string; checkoutId: string };
       if (!resData.success) throw new Error(resData.error || "STK Push failed");
 
       toast.success("M-Pesa prompt sent to your phone!");
       
       // Poll for status
       startPolling(resData.checkoutId);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsProcessing(false);
       setPaymentStatus("FAILED");
-      toast.error(error.message);
+      toast.error(error instanceof Error ? error.message : "Payment failed");
     }
   };
 
@@ -66,7 +67,7 @@ export function StepPayment({ data, orderId, onNext }: StepPaymentProps) {
           toast.success("Payment confirmed!");
           setTimeout(onNext, 1500);
         }
-      } catch (e) {
+      } catch {
         // Continue polling
       }
     }, 3000);

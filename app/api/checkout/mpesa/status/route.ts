@@ -36,7 +36,8 @@ export async function GET(req: Request) {
       status: order.paymentStatus === "PAID" ? "PAID" : "PENDING"
     });
 
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 }

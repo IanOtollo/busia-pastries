@@ -3,20 +3,15 @@
 import React from "react";
 import { Truck, Store, MapPin, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { FulfillmentMode } from "@/app/checkout/page";
-import { useCart } from "@/store/useCart";
-import { useCurrency } from "@/store/useCurrency";
+import { CheckoutFormData } from "@/types/checkout";
 
 interface StepOrderProps {
-  data: any;
-  updateData: (data: any) => void;
+  data: CheckoutFormData;
+  updateData: (data: Partial<CheckoutFormData>) => void;
   onNext: () => void;
 }
 
 export function StepOrder({ data, updateData, onNext }: StepOrderProps) {
-  const items = useCart((state) => state.items);
-  const { formatPrice } = useCurrency();
-
   return (
     <div className="space-y-12 animate-fade-in">
       <div className="space-y-6">

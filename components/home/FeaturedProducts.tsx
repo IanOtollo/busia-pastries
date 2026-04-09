@@ -1,28 +1,61 @@
 import React from "react";
 import { ProductCard } from "@/components/product/ProductCard";
 import { sanityFetch } from "@/lib/sanity/client";
+import { ChefHat } from "lucide-react";
 
-/**
- * Featured Products Section
- * Strictly follows the "Zero Mock Data" policy.
- */
-
-const FEATURED_QUERY = `*[_type == "product" && isFeatured == true] | order(_createdAt desc) [0...6] {
-  _id,
-  name,
-  "slug": slug.current,
-  category,
-  description,
-  priceKes,
-  inStock,
-  "mainImage": images[0] {
-    asset-> { url },
-    alt
-  }
-}`;
+interface Product {
+  _id: string;
+  name: string;
+  slug: { current: string };
+  category: string;
+  description: string;
+  priceKes: number;
+  inStock: boolean;
+  mainImage?: { asset: { url: string }; alt?: string };
+}
 
 export async function FeaturedProducts() {
-  const products: any = await sanityFetch({ query: FEATURED_QUERY });
+  /**
+   * ZERO MOCK DATA POLICY:
+   * We fetch real products from Sanity. If empty, we show the 
+   * "Under Maintenance" state instead of placeholders.
+   */
+  const result = await sanityFetch<Product[]>({
+    query: `*[_type == "product" && featured == true][0...4] {
+      _id,
+      name,
+      slug,
+      category,
+      description,
+      priceKes,
+      inStock,
+      "mainImage": images[0] {
+        asset-> { url },
+        alt
+      }
+    }`,
+    tags: ["product"],
+  });
+
+  const products = Array.isArray(result) ? result : [];
+
+  if (products.length === 0) {
+    return (
+      <section className="py-24 bg-bp-bg">
+        <div className="container mx-auto px-4 text-center space-y-8">
+          <div className="w-20 h-20 bg-bp-surface rounded-full flex items-center justify-center mx-auto border-2 border-dashed border-bp-border">
+            <ChefHat className="w-10 h-10 text-bp-text-muted" />
+          </div>
+          <div className="space-y-4">
+            <h2 className="font-display text-4xl font-bold text-bp-text">Our menu is being updated.</h2>
+            <p className="text-bp-text-muted max-w-md mx-auto leading-relaxed">
+              Michael is currently refining our seasonal selection. Check back soon for fresh, artisan bakes.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 bg-bp-bg">
@@ -30,35 +63,29 @@ export async function FeaturedProducts() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="space-y-4">
             <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-bp-accent">
-              From the Oven
+              Michael&apos;s Favorites
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-bp-text leading-none">
-              Our Most Loved Bakes
+            <h2 className="text-5xl md:text-7xl font-bold text-bp-text leading-none">
+              Featured <br />
+              <span className="text-bp-accent italic">Creation.</span>
             </h2>
           </div>
+          <p className="text-bp-text-muted max-w-sm md:text-right leading-relaxed font-body">
+            Hand-picked selections from our Busia bakery, crafted with premium local ingredients.
+          </p>
         </div>
 
-        {products && products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product: any) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-24 text-center space-y-8 animate-fade-in border-2 border-dashed border-bp-border rounded-3xl bg-bp-surface/30">
-            <div className="w-24 h-24 bg-bp-surface rounded-full flex items-center justify-center text-bp-text-muted">
-               <svg className="w-12 h-12 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                  <path d="M12 2v20M12 2L8 6M12 2l4 4M12 7l-5 4" />
-               </svg>
-            </div>
-            <div className="space-y-3">
-               <h3 className="font-display text-3xl font-bold text-bp-text">Our menu is being updated.</h3>
-               <p className="text-bp-text-muted text-sm max-w-xs mx-auto leading-relaxed font-body">
-                  Michael is currently hand-crafting new recipes. Please check back soon for our latest artisan bakes.
-               </p>
-            </div>
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.map((product) => (
+            <ProductCard 
+              key={product._id} 
+              product={{
+                ...product,
+                slug: product.slug.current // Flatten the slug for the ProductCard
+              }} 
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

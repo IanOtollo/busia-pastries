@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SeasonalProvider } from "@/components/providers/SeasonalProvider";
+import { NextAuthProvider } from "@/components/providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
 const cormorant = Cormorant_Garamond({
@@ -50,14 +51,16 @@ export default function RootLayout({
       <body
         className={`${cormorant.variable} ${jost.variable} ${dmMono.variable} font-body bg-bp-bg text-bp-text antialiased`}
       >
-        <SeasonalProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-          <Toaster position="bottom-right" />
-        </SeasonalProvider>
+        <NextAuthProvider>
+          <SeasonalProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </div>
+            <Toaster position="bottom-right" />
+          </SeasonalProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

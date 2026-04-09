@@ -2,11 +2,12 @@
 
 import React from "react";
 import { User, Phone, Mail, ArrowLeft, ArrowRight, LogIn } from "lucide-react";
-import { cn } from "@/lib/utils/cn";
+
+import { CheckoutFormData } from "@/types/checkout";
 
 interface StepDetailsProps {
-  data: any;
-  updateData: (data: any) => void;
+  data: CheckoutFormData;
+  updateData: (data: Partial<CheckoutFormData>) => void;
   onNext: () => void;
   onBack: () => void;
 }

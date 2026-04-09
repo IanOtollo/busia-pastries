@@ -12,7 +12,6 @@ export default function Home() {
       <TrustBar />
       <FeaturedProducts />
       <HowItWorks />
-      {/* @ts-expect-error Server Component */}
       <ReviewsSection />
       <CustomOrderBanner />
     </div>

@@ -26,7 +26,11 @@ interface OrderTrackingClientProps {
     guestName?: string;
     guestPhone?: string;
     totalKes: number;
-    items: any[];
+    items: Array<{
+      productName: string;
+      quantity: number;
+      unitPriceKes: number;
+    }>;
   };
 }
 

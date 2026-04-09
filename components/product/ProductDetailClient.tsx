@@ -105,7 +105,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             {/* Thumbnails */}
             {product.images && product.images.length > 1 && (
               <div className="flex gap-4 overflow-x-auto no-scrollbar pt-2">
-                {product.images.map((img: any, idx: number) => (
+                {product.images.map((img: { asset: { url: string } }, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
