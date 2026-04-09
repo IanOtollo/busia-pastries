@@ -1,47 +1,51 @@
 import React from "react";
+import { sanityFetch } from "@/lib/sanity/client";
 import { ProductDetailClient } from "@/components/product/ProductDetailClient";
-import { client } from "@/lib/sanity/client";
-import { GET_PRODUCT_BY_SLUG, GET_ALL_SLUGS } from "@/lib/sanity/queries";
-import { SanityProduct } from "@/types/product";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 
-export const revalidate = 60; // Revalidate every minute
+const PRODUCT_QUERY = `*[_type == "product" && slug.current == $slug][0] {
+  _id,
+  name,
+  "slug": slug.current,
+  category,
+  description,
+  richDescription,
+  priceKes,
+  inStock,
+  ingredients,
+  allergens,
+  "images": images[] {
+    asset-> { url },
+    alt
+  }
+}`;
 
-export async function generateStaticParams() {
-  const slugs = (await client.fetch(GET_ALL_SLUGS)) as { slug: string }[];
-  return slugs.map((s) => ({
-    slug: s.slug,
-  }));
-}
-
-interface PageProps {
-  params: { slug: string };
-}
-
-export default async function ProductDetailPage({ params }: PageProps) {
-  const product = (await client.fetch(GET_PRODUCT_BY_SLUG, {
-    slug: params.slug,
-  })) as SanityProduct | null;
-
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const product: any = await sanityFetch({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+  
   if (!product) {
-    notFound();
+    return { title: "Product Not Found | Busia Pastries" };
   }
 
-  return (
-    <div className="min-h-screen pt-32 pb-24">
-      <div className="container mx-auto px-4 md:px-6">
-        <Link 
-          href="/menu" 
-          className="inline-flex items-center text-sm font-black uppercase tracking-widest text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors mb-12 group gap-2"
-        >
-           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
-           Back to Menu
-        </Link>
+  return {
+    title: `${product.name} | Busia Pastries`,
+    description: product.description,
+  };
+}
 
-        <ProductDetailClient product={product} />
-      </div>
-    </div>
-  );
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const product: any = await sanityFetch({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+
+  if (!product) {
+    return (
+       <div className="min-h-screen pt-40 pb-20 text-center">
+          <div className="container mx-auto px-4">
+             <h1 className="font-display text-4xl font-bold">Pastry Not Found</h1>
+             <p className="mt-4 text-bp-text-muted">We couldn&apos;t find the artisan bake you&apos;re looking for.</p>
+          </div>
+       </div>
+    );
+  }
+
+  return <ProductDetailClient product={product} />;
 }

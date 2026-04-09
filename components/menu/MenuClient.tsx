@@ -1,107 +1,158 @@
 "use client";
-import React, { useState } from "react";
-import { ProductGrid } from "@/components/product/ProductGrid";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { SanityProduct } from "@/types/product";
+
+import React, { useState, useMemo } from "react";
+import { ProductCard } from "@/components/product/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
+import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
-const CATEGORIES = ["ALL", "CAKES", "PASTRIES", "BREADS", "SEASONAL"];
-
-interface MenuClientProps {
-  initialProducts: SanityProduct[];
+interface Product {
+  _id: string;
+  name: string;
+  slug: string;
+  category: string;
+  description: string;
+  priceKes: number;
+  inStock: boolean;
+  mainImage?: { asset: { url: string }; alt?: string };
 }
 
-export function MenuClient({ initialProducts }: MenuClientProps) {
-  const [activeCategory, setActiveCategory] = useState("ALL");
-  const [searchQuery, setSearchQuery] = useState("");
+interface MenuClientProps {
+  initialProducts: Product[];
+}
 
-  const filteredProducts = initialProducts.filter(p => 
-    (activeCategory === "ALL" || p.category?.toUpperCase() === activeCategory) &&
-    (p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+const CATEGORIES = ["All", "Cakes", "Pastries", "Breads", "Seasonal"];
+
+export function MenuClient({ initialProducts }: MenuClientProps) {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("featured");
+
+  const filteredProducts = useMemo(() => {
+    let results = [...initialProducts];
+
+    // Filter by Category
+    if (activeCategory !== "All") {
+      results = results.filter((p) => p.category === activeCategory);
+    }
+
+    // Filter by Search
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      results = results.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q)
+      );
+    }
+
+    // Sorting
+    if (sortBy === "price-low") {
+      results.sort((a, b) => a.priceKes - b.priceKes);
+    } else if (sortBy === "price-high") {
+      results.sort((a, b) => b.priceKes - a.priceKes);
+    }
+
+    // Push out-of-stock to the end
+    results.sort((a, b) => (a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1));
+
+    return results;
+  }, [initialProducts, activeCategory, searchQuery, sortBy]);
 
   return (
     <div className="space-y-12">
-      {/* Dynamic Controls Bar */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-         <div className="space-y-4">
-            <h1 className="font-display text-6xl md:text-8xl font-black tracking-tighter text-[var(--color-text)]">
-              The <span className="text-[var(--color-accent)]">Menu.</span>
-            </h1>
-            <p className="text-[var(--color-muted)] text-xl max-w-xl leading-relaxed">
-               Hand-crafted daily in Busia with the finest local ingredients. 
-               Explore our artisanal selection of pastries and cakes.
-            </p>
-         </div>
-         
-         <div className="relative w-full md:w-96 group">
-            <div className="absolute inset-0 bg-[var(--color-accent)]/5 blur-xl group-focus-within:bg-[var(--color-accent)]/10 transition-all rounded-full" />
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-muted)] group-focus-within:text-[var(--color-accent)] transition-colors" />
-            <input 
-              type="text"
-              placeholder="Search our artisan bakes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="relative w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-5 pl-14 pr-8 text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all shadow-sm"
-            />
-         </div>
-      </div>
-
-      {/* Categories & Stats */}
-      <div className="flex flex-wrap items-center justify-between gap-6 pt-4 border-t border-[var(--color-border)]/50">
-        <div className="flex flex-wrap items-center gap-2">
-          {CATEGORIES.map(cat => (
+      {/* Search & Filters Bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 py-6 border-y border-bp-border/50 sticky top-20 z-30 bg-bp-bg/80 backdrop-blur-md">
+        {/* Categories */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+          {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`relative px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
-                activeCategory === cat 
-                ? "text-white" 
-                : "bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-text)] border border-[var(--color-border)]"
-              }`}
-            >
-              <span className="relative z-10">{cat}</span>
-              {activeCategory === cat && (
-                <motion.div 
-                  layoutId="activeCat"
-                  className="absolute inset-0 bg-[var(--color-accent)] rounded-full shadow-lg shadow-[var(--color-accent)]/20"
-                />
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
+                activeCategory === cat
+                  ? "bg-bp-cta border-bp-cta text-bp-cta-text shadow-sm"
+                  : "bg-bp-surface border-bp-border text-bp-text-muted hover:text-bp-text"
               )}
+            >
+              {cat}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-mono font-bold text-[var(--color-muted)] uppercase tracking-wider">
-           <SlidersHorizontal className="w-4 h-4" />
-           <span>Showing {filteredProducts.length} Artisan Creations</span>
+        {/* Search & Sort */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="relative w-full sm:w-64 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted group-focus-within:text-bp-accent transition-colors" />
+            <input
+              type="text"
+              placeholder="Search bakes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-bp-surface border border-bp-border rounded-md pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-bp-accent transition-all"
+            />
+          </div>
+
+          <div className="relative w-full sm:w-48 group">
+            <SlidersHorizontal className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full bg-bp-surface border border-bp-border rounded-md pl-11 pr-8 py-2.5 text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-bp-accent transition-all cursor-pointer"
+            >
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low-High</option>
+              <option value="price-high">Price: High-Low</option>
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted pointer-events-none" />
+          </div>
         </div>
       </div>
 
-      {/* Results */}
+      {/* Results Count */}
+      <div className="flex justify-between items-center">
+         <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-bp-text-muted">
+            {filteredProducts.length} items found
+         </span>
+      </div>
+
+      {/* Product Grid */}
       <div className="min-h-[400px]">
         <AnimatePresence mode="popLayout">
           {filteredProducts.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.4 }}
+            <motion.div 
+               layout
+               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              <ProductGrid products={filteredProducts} isLoading={false} />
+              {filteredProducts.map((product) => (
+                <motion.div
+                  key={product._id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-24 text-center space-y-4"
+              className="flex flex-col items-center justify-center py-32 text-center space-y-6"
             >
-               <div className="w-20 h-20 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center">
-                  <Search className="w-8 h-8 text-[var(--color-muted)]" />
-               </div>
-               <h3 className="text-2xl font-display font-bold text-[var(--color-text)]">No matches found</h3>
-               <p className="text-[var(--color-muted)] max-w-xs">
-                 We couldn&apos;t find any pastries matching &quot;{searchQuery}&quot;. Try a different search term or category.
-               </p>
+              <div className="w-16 h-16 bg-bp-surface rounded-full flex items-center justify-center text-bp-text-muted border border-bp-border">
+                <Search className="w-6 h-6 opacity-30" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-display text-2xl font-bold text-bp-text">No matches found</h3>
+                <p className="text-bp-text-muted text-sm max-w-xs font-body">
+                   Try adjusting your filters or search terms to find what you&apos;re looking for.
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

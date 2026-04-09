@@ -1,110 +1,118 @@
 "use client";
+
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/store/useCart";
+import { useCurrency } from "@/store/useCurrency";
 import { Plus, Eye } from "lucide-react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { useCurrency } from "@/hooks/useCurrency";
-import { formatPrice } from "@/lib/utils/currency";
-import { useCart } from "@/hooks/useCart";
-import { SanityProduct } from "@/types/product";
-import { cn } from "@/lib/utils/cn";
+import toast from "react-hot-toast";
 
-interface ProductCardProps {
-  product: SanityProduct;
+interface ProductProps {
+  product: {
+    _id: string;
+    name: string;
+    slug: string;
+    category: string;
+    description: string;
+    priceKes: number;
+    inStock: boolean;
+    mainImage?: { asset: { url: string }; alt?: string };
+  };
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const { currency, rate } = useCurrency();
-  const { addItem } = useCart();
+export function ProductCard({ product }: ProductProps) {
+  const addItem = useCart((state) => state.addItem);
+  const { formatPrice } = useCurrency();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     addItem({
       sanityId: product._id,
       productName: product.name,
       unitPriceKes: product.priceKes,
       quantity: 1,
-      imageUrl: product.mainImage?.asset.url,
+      imageUrl: product.mainImage?.asset?.url,
       slug: product.slug,
     });
+    toast.success(`${product.name} added to cart!`);
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      className={cn(
-        "group relative flex flex-col h-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl",
-        !product.inStock && "opacity-80"
-      )}
-    >
-      {/* Badge: Seasonal or Out of Stock */}
-      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-        {!product.inStock && (
-          <Badge variant="danger" className="backdrop-blur-sm bg-rose-500/90 text-white">Out of Stock</Badge>
+    <div className={`product-card group relative flex flex-col h-full ${!product.inStock && "opacity-60 grayscale-[0.6]"}`}>
+      {/* Image Area */}
+      <Link href={`/menu/${product.slug}`} className="relative block aspect-[16/9] overflow-hidden rounded-t-xl bg-bp-surface-2">
+        {product.mainImage?.asset?.url ? (
+          <Image
+            src={product.mainImage.asset.url}
+            alt={product.mainImage.alt || product.name}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-bp-border">
+            <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M12 2v20M12 2L8 6M12 2l4 4M12 7l-5 4" />
+            </svg>
+          </div>
         )}
-        {product.isFeatured && product.inStock && (
-          <Badge variant="accent">Highly Loved</Badge>
-        )}
-      </div>
 
-      {/* Image Wrapper */}
-      <Link href={`/menu/${product.slug}`} className="relative aspect-square overflow-hidden bg-white/50">
-        <Image
-          src={product.mainImage?.asset.url || "/placeholder-pastry.jpg"}
-          alt={product.mainImage?.alt || product.name}
-          fill
-          className={cn(
-            "object-cover transition-transform duration-700 group-hover:scale-110",
-            !product.inStock && "grayscale"
-          )}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-        
-        {/* Overlay Actions */}
-        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-           <div className="p-3 bg-white text-[var(--color-text)] rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-             <Eye className="w-5 h-5" />
-           </div>
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4">
+          <span className="bg-bp-surface/90 backdrop-blur-md px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-bp-text-muted border border-bp-border/50 rounded-sm">
+            {product.category}
+          </span>
         </div>
+
+        {!product.inStock && (
+          <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+            <span className="bg-bp-error text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full">
+              Unavailable
+            </span>
+          </div>
+        )}
       </Link>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-5 space-y-3">
-        <div className="space-y-1">
+      {/* Body */}
+      <div className="flex flex-col flex-grow p-6 space-y-4">
+        <div className="space-y-2">
           <Link href={`/menu/${product.slug}`}>
-            <h3 className="font-display text-xl font-bold text-[var(--color-text)] leading-tight hover:text-[var(--color-accent)] transition-colors">
+            <h3 className="font-display text-xl font-bold text-bp-text group-hover:text-bp-accent transition-colors leading-tight">
               {product.name}
             </h3>
           </Link>
-          <p className="text-xs font-mono font-medium text-[var(--color-accent)] uppercase tracking-wider">
-            {product.category}
+          <p className="text-bp-text-muted text-xs font-body line-clamp-2 leading-relaxed">
+            {product.description}
           </p>
         </div>
 
-        <p className="text-sm text-[var(--color-muted)] line-clamp-2 leading-relaxed">
-          {product.description}
-        </p>
-
-        <div className="pt-2 mt-auto flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-lg font-mono font-bold text-[var(--color-text)]">
-              {formatPrice(product.priceKes, currency, rate)}
-            </span>
+        <div className="mt-auto pt-4 space-y-6">
+          <div className="flex items-end justify-between">
+            <div className="flex flex-col">
+              <span className="font-mono text-lg font-bold text-bp-accent">
+                {formatPrice(product.priceKes)}
+              </span>
+            </div>
+            <Link 
+              href={`/menu/${product.slug}`}
+              className="text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted hover:text-bp-accent transition-colors flex items-center gap-1.5"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              Details
+            </Link>
           </div>
 
-          <Button
-            size="sm"
+          <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className="rounded-full w-10 h-10 p-0"
+            className="w-full bg-bp-cta text-bp-cta-text py-3.5 rounded-md font-bold text-xs uppercase tracking-widest transition-all duration-300 hover:bg-bp-cta-hover active:scale-[0.98] disabled:bg-bp-border disabled:text-bp-text-muted flex items-center justify-center gap-2 group/btn"
           >
-            <Plus className="w-5 h-5" />
-          </Button>
+            <Plus className="w-4 h-4 transition-transform group-hover/btn:rotate-90" />
+            Add to Cart
+          </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

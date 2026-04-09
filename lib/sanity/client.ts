@@ -1,57 +1,49 @@
-const MOCK_PRODUCTS = [
-  {
-    _id: "p1",
-    _createdAt: new Date().toISOString(),
-    name: "Classic Chocolate Cake",
-    slug: "classic-chocolate-cake",
-    category: "Cakes",
-    description: "Rich, decadent chocolate cake with fudge frosting.",
-    priceKes: 2500,
-    isFeatured: true,
-    inStock: true,
-    images: [{ asset: { _id: "img1", url: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=800" }, alt: "Chocolate Cake" }],
-    mainImage: { asset: { _id: "img1", url: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=800" }, alt: "Chocolate Cake" }
-  },
-  {
-    _id: "p2",
-    _createdAt: new Date().toISOString(),
-    name: "Busia Famous Bread",
-    slug: "busia-famous-bread",
-    category: "Bread",
-    description: "Freshly baked artisan bread daily.",
-    priceKes: 150,
-    isFeatured: true,
-    inStock: true,
-    images: [{ asset: { _id: "img2", url: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800" }, alt: "Bread" }],
-    mainImage: { asset: { _id: "img2", url: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=800" }, alt: "Bread" }
-  },
-  {
-    _id: "p3",
-    _createdAt: new Date().toISOString(),
-    name: "Vanilla Cupcake",
-    slug: "vanilla-cupcake",
-    category: "Pastries",
-    description: "Sweet vanilla cupcake with buttercream.",
-    priceKes: 200,
-    isFeatured: true,
-    inStock: true,
-    images: [{ asset: { _id: "img3", url: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&q=80&w=800" }, alt: "Vanilla Cupcake" }],
-    mainImage: { asset: { _id: "img3", url: "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&q=80&w=800" }, alt: "Vanilla Cupcake" }
-  }
-];
+import { createClient } from "@sanity/client";
 
-export const sanityClient = {
-  fetch: async (query: string, params?: Record<string, unknown>): Promise<unknown> => {
-    if (query.includes("slug.current == $slug")) {
-      return MOCK_PRODUCTS.find(p => p.slug === (params as Record<string, string>)?.slug) || null;
-    }
-    // Only match if the query is specifically for slugs (as in GET_ALL_SLUGS)
-    // and NOT for the full product card (as in GET_ALL_PRODUCTS)
-    if (query.includes('"slug": slug.current') && !query.includes('name,')) {
-      return MOCK_PRODUCTS.map(p => ({ slug: p.slug }));
-    }
-    return MOCK_PRODUCTS;
-  }
-};
+/**
+ * Sanity Client Configuration
+ * Strictly adheres to the "Zero Mock Data" policy.
+ * If credentials are missing, the app will handle empty data states gracefully.
+ */
 
-export const client = sanityClient;
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "missing-project-id";
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+const apiVersion = "2024-03-01";
+
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: process.env.NODE_ENV === "production",
+});
+
+/**
+ * Fetch helper with error handling
+ */
+export async function sanityFetch<T>({
+  query,
+  params = {},
+  tags,
+}: {
+  query: string;
+  params?: Record<string, unknown>;
+  tags?: string[];
+}): Promise<T | []> {
+  // If we're missing credentials, return empty array to trigger specify empty state UI
+  if (projectId === "missing-project-id") {
+    console.warn("Sanity Project ID is missing. Returning empty state.");
+    return [] as unknown as T;
+  }
+
+  try {
+    return await client.fetch<T>(query, params, {
+      next: {
+        revalidate: process.env.NODE_ENV === "development" ? 30 : 3600,
+        tags,
+      },
+    });
+  } catch (error) {
+    console.error("Sanity fetch error:", error);
+    return [] as unknown as T;
+  }
+}

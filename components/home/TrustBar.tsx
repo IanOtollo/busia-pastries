@@ -1,33 +1,30 @@
-import { Cake, Truck, Star, Lock } from "lucide-react";
+import React from "react";
+import { Flame, Truck, Smartphone, Phone } from "lucide-react";
+
+const TRUST_ITEMS = [
+  { icon: Flame, text: "Baked Fresh Daily" },
+  { icon: Truck, text: "Delivered in Busia Town" },
+  { icon: Smartphone, text: "Pay via M-Pesa" },
+  { icon: Phone, text: "Call: +254 724 848228" },
+];
 
 export function TrustBar() {
-  const trustItems = [
-    { icon: Cake, label: "Baked Fresh Daily" },
-    { icon: Truck, label: "Delivered in Busia" },
-    { icon: Star, label: "5-Star Reviews" },
-    { icon: Lock, label: "Secure Checkout" },
-  ];
-
   return (
-    <section className="py-12 bg-[var(--color-bg)] border-y border-[var(--color-border)] overflow-hidden">
+    <div className="bg-bp-surface border-y border-bp-border py-8">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 lg:gap-24">
-          {trustItems.map((item, index) => (
-            <div 
-              key={index}
-              className="flex items-center gap-3 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="p-2.5 rounded-full bg-[var(--color-surface)] text-[var(--color-accent)] border border-[var(--color-border)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
+          {TRUST_ITEMS.map((item, idx) => (
+            <div key={idx} className="flex items-center justify-center lg:justify-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-bp-bg border border-bp-border flex items-center justify-center text-bp-accent">
                 <item.icon className="w-5 h-5" />
               </div>
-              <span className="text-sm font-medium text-[var(--color-text)] tracking-tight">
-                {item.label}
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text">
+                {item.text}
               </span>
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -1,152 +1,178 @@
 "use client";
-import React, { useState } from "react";
-import { useCart } from "@/hooks/useCart";
-import { StepIndicator } from "@/components/checkout/StepIndicator";
-import { StepMix } from "@/components/checkout/StepMix";
-import { StepBake } from "@/components/checkout/StepBake";
-import { StepBox } from "@/components/checkout/StepBox";
-import { StepPay } from "@/components/checkout/StepPay";
-import { StepDone } from "@/components/checkout/StepDone";
-import { ShoppingBag, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-// Define strict types for checkout data
-interface CheckoutData {
-  fulfillment: "DELIVERY" | "PICKUP";
-  deliveryAddress: string;
-  notes: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/store/useCart";
+import { useCurrency } from "@/store/useCurrency";
+import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
+import { StepOrder } from "@/components/checkout/StepOrder";
+import { StepDetails } from "@/components/checkout/StepDetails";
+import { StepSummary } from "@/components/checkout/StepSummary";
+import { StepPayment } from "@/components/checkout/StepPayment";
+import { StepConfirmed } from "@/components/checkout/StepConfirmed";
+import toast from "react-hot-toast";
+
+export type FulfillmentMode = "DELIVERY" | "PICKUP";
 
 export default function CheckoutPage() {
-  const { items } = useCart();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [trackingToken, setTrackingToken] = useState<string | null>(null);
-  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+  const { items, getTotal, clearCart } = useCart();
+  const { currency, formatPrice } = useCurrency();
+  const [step, setStep] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
-  const [formData, setFormData] = useState<CheckoutData>({
-    fulfillment: "DELIVERY",
-    deliveryAddress: "",
+  const [formData, setFormData] = useState({
+    fulfillment: "DELIVERY" as FulfillmentMode,
+    deliveryArea: "",
+    deliveryLandmark: "",
     notes: "",
-    name: "",
+    fullName: "",
     email: "",
     phone: "",
+    saveDetails: false,
+    paymentMethod: "MPESA" as "MPESA" | "CASH",
   });
 
-  const updateFormData = (newData: Partial<CheckoutData>) => {
-    setFormData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev + 1);
+  const [orderId, setOrderId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    if (items.length === 0 && step < 5) {
+      router.push("/cart");
+    }
+  }, [items, step, router]);
+
+  if (!mounted || items.length === 0 && step < 5) return null;
+
+  const nextStep = () => setStep((s) => Math.min(s + 1, 5));
+  const prevStep = () => setStep((s) => Math.max(s - 1, 1));
+
+  const handleUpdateForm = (data: Partial<typeof formData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const handleCreateOrder = async () => {
-    setIsCreatingOrder(true);
+  const handlePlaceOrder = async () => {
     try {
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: items.map(i => ({
-            sanityId: i.sanityId,
-            productName: i.productName,
-            quantity: i.quantity,
-            unitPriceKes: i.unitPriceKes
-          })),
-          displayTotal: items.reduce((acc, i) => acc + (i.unitPriceKes * i.quantity), 0),
-          ...formData
+          ...formData,
+          items,
+          totalKes: getTotal() + (formData.fulfillment === "DELIVERY" ? 100 : 0),
+          deliveryFeeKes: formData.fulfillment === "DELIVERY" ? 100 : 0,
+          subtotalKes: getTotal(),
+          displayCurrency: currency,
         }),
       });
 
-      const data = await response.json();
-      if (!data.success) throw new Error(data.error);
+      const resData = (await response.json()) as { success: boolean; error?: string; data?: { id: string } };
+      if (!resData.success || !resData.data) throw new Error(resData.error || "Failed to place order");
 
-      setOrderId(data.orderId);
-      setTrackingToken(data.trackingToken);
-      setCurrentStep(4); // Move to Payment step
-    } catch {
-      alert("Failed to create order. Please try again.");
-    } finally {
-      setIsCreatingOrder(false);
+      setOrderId(resData.data.id);
+      nextStep(); // Advance to payment or confirmed
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "An error occurred");
     }
   };
 
-  if (items.length === 0 && currentStep < 5) {
-     return (
-        <div className="min-h-screen pt-32 pb-24 flex flex-col items-center justify-center space-y-8 animate-fade-in">
-          <div className="w-32 h-32 rounded-full bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-muted)]">
-            <ShoppingBag className="w-16 h-16" />
-          </div>
-          <div className="text-center space-y-2">
-            <h1 className="font-display text-4xl font-bold">Tray is empty</h1>
-            <p className="text-[var(--color-muted)] max-w-xs mx-auto">Please add items to your cart before checking out.</p>
-          </div>
-          <Link href="/menu">
-             <Button size="lg" className="h-14 px-10 font-bold rounded-2xl">Return to Menu</Button>
-          </Link>
-        </div>
-     );
-  }
-
   return (
-    <div className="min-h-screen pt-32 pb-24">
+    <div className="min-h-screen pt-32 pb-24 bg-bp-bg">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-4xl mx-auto space-y-12">
-          {currentStep < 5 && (
-            <div className="space-y-8">
-               <div className="flex items-center justify-between">
-                  <button onClick={() => router.back()} className="flex items-center text-sm font-bold text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors">
-                     <ArrowLeft className="mr-2 w-4 h-4" /> Back
-                  </button>
-                  <h1 className="font-display text-4xl font-bold">Checkout</h1>
-                  <div className="w-4" /> {/* Spacer */}
-               </div>
-               <StepIndicator currentStep={currentStep} />
-            </div>
-          )}
+        {/* Baking Journey Stepper */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <CheckoutStepper currentStep={step} />
+        </div>
 
-          <div className="bg-white border border-[var(--color-border)] rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-[var(--color-accent)]/5">
-            {currentStep === 1 && <StepMix data={formData} onNext={updateFormData} />}
-            {currentStep === 2 && <StepBake data={formData} onNext={updateFormData} onBack={() => setCurrentStep(1)} />}
-            {currentStep === 3 && (
-               <StepBox 
+        {/* Steps Container */}
+        <div className="max-w-4xl mx-auto">
+          <AnimatePresence mode="wait">
+            {step === 1 && (
+              <motion.div
+                key="step1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StepOrder 
                   data={formData} 
-                  onNext={handleCreateOrder} 
-                  onBack={() => setCurrentStep(2)} 
-                  onJumpToStep={(s) => setCurrentStep(s)}
-               />
+                  updateData={handleUpdateForm} 
+                  onNext={nextStep} 
+                />
+              </motion.div>
             )}
-            {currentStep === 4 && orderId && (
-              <StepPay 
-                orderId={orderId}
-                data={formData}
-                onNext={() => setCurrentStep(5)}
-                onBack={() => setCurrentStep(3)}
-              />
+
+            {step === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StepDetails 
+                   data={formData} 
+                   updateData={handleUpdateForm} 
+                   onNext={nextStep} 
+                   onBack={prevStep}
+                />
+              </motion.div>
             )}
-            {currentStep === 5 && orderId && trackingToken && (
-               <StepDone 
-                  orderId={orderId} 
-                  trackingToken={trackingToken}
-                  data={formData}
-               />
+
+            {step === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StepSummary 
+                  data={formData} 
+                  onNext={handlePlaceOrder} 
+                  onBack={prevStep}
+                />
+              </motion.div>
             )}
-          </div>
+
+            {step === 4 && orderId && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StepPayment 
+                  data={formData} 
+                  orderId={orderId}
+                  onNext={nextStep} 
+                />
+              </motion.div>
+            )}
+
+            {step === 5 && (
+              <motion.div
+                key="step5"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <StepConfirmed 
+                  orderId={orderId!} 
+                  data={formData} 
+                  onFinish={() => {
+                    clearCart();
+                    router.push(`/orders/${orderId}`);
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-
-      {isCreatingOrder && (
-         <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
-            <div className="text-center space-y-4">
-               <div className="w-16 h-16 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin mx-auto" />
-               <p className="font-bold text-[var(--color-muted)]">Creating your order...</p>
-            </div>
-         </div>
-      )}
     </div>
   );
 }

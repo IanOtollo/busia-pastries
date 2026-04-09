@@ -1,91 +1,63 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, DM_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Cormorant_Garamond, Jost, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { CookieBanner } from "@/components/layout/CookieBanner";
-import { SeasonalTheme } from "@/components/ui/SeasonalTheme";
-import { Providers } from "./providers";
+import { SeasonalProvider } from "@/components/providers/SeasonalProvider";
+import { Toaster } from "react-hot-toast";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-cormorant",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const jost = Jost({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-dm-sans",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-jost",
   display: "swap",
 });
 
 const dmMono = DM_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400", "500"],
   variable: "--font-dm-mono",
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
-  title: {
-    default: "Busia Pastries — Premium Bakery & Confectionery",
-    template: "%s | Busia Pastries",
-  },
-  description:
-    "Premium freshly baked pastries, cakes, and artisan bread in Busia, Kenya. Order online for delivery or pickup. Made fresh daily.",
-  keywords: ["pastries", "cakes", "bakery", "Busia", "Kenya", "order online", "fresh baked"],
-  authors: [{ name: "Busia Pastries" }],
-  creator: "Busia Pastries",
+  title: "Busia Pastries | Baked Fresh. Delivered with Love.",
+  description: "Hand-crafted artisan pastries and cakes in Busia Town, Kenya. Order online for delivery or pickup.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
-  openGraph: {
-    type: "website",
-    locale: "en_KE",
-    title: "Busia Pastries — Premium Bakery & Confectionery",
-    description: "Premium pastries, cakes, and artisan bread in Busia, Kenya.",
-    siteName: "Busia Pastries",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Busia Pastries",
-    description: "Premium pastries in Busia, Kenya. Order online.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable}`}
-    >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2C1810" />
-      </head>
-      <body className="font-body antialiased">
-        <Providers>
-          <SeasonalTheme />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <CookieBanner />
-        </Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${cormorant.variable} ${jost.variable} ${dmMono.variable} font-body bg-bp-bg text-bp-text antialiased`}
+      >
+        <SeasonalProvider>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster position="bottom-right" />
+        </SeasonalProvider>
       </body>
     </html>
   );

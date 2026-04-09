@@ -1,26 +1,36 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const isLoggedIn = !!token;
-  const { nextUrl } = req;
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
 
-  const isAuthPage = nextUrl.pathname.startsWith("/auth");
-  const isAccountPage = nextUrl.pathname.startsWith("/account");
+  // 1. Security Headers
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.sanity.io *.google-analytics.com; connect-src 'self' *.sanity.io *.supabase.co *.upstash.io api.frankfurter.app; img-src 'self' data: blob: *.sanity.io images.unsplash.com; style-src 'self' 'unsafe-inline'; font-src 'self' fonts.gstatic.com;"
+  );
 
-  if (isAuthPage && isLoggedIn) {
-    return NextResponse.redirect(new URL("/account", nextUrl));
-  }
-
-  if (isAccountPage && !isLoggedIn) {
-     return NextResponse.redirect(new URL("/auth/login", nextUrl));
-  }
-
-  return NextResponse.next();
+  // 2. Protection logic (Simplified for Phase 1 - focused on availability)
+  const isAccountPage = request.nextUrl.pathname.startsWith("/account");
+  const isCheckoutPage = request.nextUrl.pathname.startsWith("/checkout");
+  
+  // Potential session check here...
+  
+  return response;
 }
 
 export const config = {
-  matcher: ["/account/:path*", "/auth/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

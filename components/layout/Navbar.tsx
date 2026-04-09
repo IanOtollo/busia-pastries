@@ -1,92 +1,63 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, User, Menu, X, ChevronRight } from "lucide-react";
+import { ShoppingBag, UserCircle2, Menu, X, ChevronRight, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/Button";
-import { CurrencyToggle } from "@/components/ui/CurrencyToggle";
-import { useCart } from "@/hooks/useCart";
+import { Logo } from "@/components/ui/Logo";
+import { useCart } from "@/store/useCart";
+import { useCurrency } from "@/store/useCurrency";
 import { cn } from "@/lib/utils/cn";
 
+const NAV_LINKS = [
+  { name: "Menu", href: "/menu" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
 export function Navbar() {
-  const [mounted, setMounted] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { totalItems } = useCart();
+  const itemCount = useCart((state) => state.getItemCount());
+  const { currency, setCurrency } = useCurrency();
 
   useEffect(() => {
-    setMounted(true);
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsOpen(false);
+    setIsMobileMenuOpen(false);
   }, [pathname]);
-
-  const navLinks = [
-    { name: "Menu", href: "/menu" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
-  ];
 
   return (
     <>
-      <header
+      <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isScrolled
-            ? "bg-[var(--color-bg)]/80 backdrop-blur-md border-b border-[var(--color-border)] py-3 shadow-sm"
-            : "bg-transparent py-6"
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6",
+          isScrolled ? "bg-bp-bg/80 backdrop-blur-xl shadow-sm py-4" : "bg-transparent"
         )}
       >
         <div className="container mx-auto px-4 md:px-6">
-          <nav className="flex items-center justify-between">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="group flex items-center gap-2"
-            >
-              <div className="w-8 h-8 flex items-center justify-center rounded-sm bg-[var(--color-cta)] text-[var(--color-cta-text)] group-hover:scale-110 transition-transform">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-5 h-5"
-                >
-                  <path d="M12 2v20" />
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </div>
-              <span className="font-display text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2">
-                Busia Pastries
-                <span className="hidden lg:flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-[var(--color-accent)]" />
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)] font-black">Delivered with Love</span>
-                </span>
-              </span>
+          <div className="flex items-center justify-between">
+            {/* Left: Logo */}
+            <Link href="/" className="relative z-50">
+              <Logo className="w-9 h-9" hideText={false} />
             </Link>
 
-            {/* Desktop Nav Links */}
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
+            {/* Center: Desktop Links */}
+            <div className="hidden md:flex items-center gap-10">
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
                   className={cn(
-                    "text-sm font-medium transition-colors hover:text-[var(--color-accent)]",
-                    pathname === link.href
-                      ? "text-[var(--color-accent)]"
-                      : "text-[var(--color-text)]"
+                    "text-sm font-medium tracking-wide transition-colors hover:text-bp-accent",
+                    pathname === link.href ? "text-bp-accent" : "text-bp-text"
                   )}
                 >
                   {link.name}
@@ -94,93 +65,115 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* Nav Right */}
+            {/* Right: Actions */}
             <div className="flex items-center gap-3 md:gap-6">
-              <div className="hidden sm:block">
-                <CurrencyToggle />
+              {/* Currency Selector (Desktop) */}
+              <div className="hidden lg:flex items-center bg-bp-surface-2/50 rounded-full p-1 border border-bp-border">
+                {["KES", "UGX"].map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCurrency(c as any)}
+                    className={cn(
+                      "px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest transition-all",
+                      currency === c ? "bg-bp-cta text-bp-cta-text shadow-sm" : "text-bp-text-muted hover:text-bp-text"
+                    )}
+                  >
+                    {c}
+                  </button>
+                ))}
               </div>
 
-              <Link href="/cart" className="relative p-2 hover:bg-[var(--color-surface)] rounded-full transition-colors">
-                <ShoppingCart className="w-5 h-5" />
-                {mounted && totalItems > 0 && (
-                  <span className="absolute top-0 right-0 w-4 h-4 bg-[var(--color-accent)] text-[var(--color-cta-text)] text-[10px] font-bold flex items-center justify-center rounded-full">
-                    {totalItems}
+              {/* Cart */}
+              <Link href="/cart" className="relative p-2 hover:bg-bp-surface-2 transition-colors rounded-full touch-target-fix">
+                <ShoppingBag className="w-6 h-6 text-bp-text" />
+                {itemCount > 0 && (
+                  <span className="absolute top-0 right-0 w-5 h-5 bg-bp-accent text-white text-[10px] font-bold flex items-center justify-center rounded-full animate-in zoom-in duration-300">
+                    {itemCount}
                   </span>
                 )}
               </Link>
 
-              <Link href="/account" className="hidden sm:block p-2 hover:bg-[var(--color-surface)] rounded-full transition-colors">
-                <User className="w-5 h-5" />
+              {/* Account (Desktop) */}
+              <Link href="/account" className="hidden md:block p-2 hover:bg-bp-surface-2 transition-colors rounded-full touch-target-fix">
+                <UserCircle2 className="w-6 h-6 text-bp-text" />
               </Link>
 
+              {/* Hamburger (Mobile) */}
               <button
-                className="md:hidden p-2 hover:bg-[var(--color-surface)] rounded-full transition-colors"
-                onClick={() => setIsOpen(true)}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 relative z-50"
+                aria-label="Toggle menu"
               >
-                <Menu className="w-6 h-6" />
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
-          </nav>
+          </div>
         </div>
-      </header>
+      </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
-        {isOpen && (
+        {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[60] bg-[var(--color-bg)] flex flex-col"
+            className="fixed inset-0 z-40 bg-bp-bg flex flex-col pt-32 px-8 pb-12 overflow-y-auto"
           >
-            <div className="p-4 flex items-center justify-between border-b border-[var(--color-border)]">
-              <span className="font-display text-2xl font-semibold">Busia Pastries</span>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-[var(--color-surface)] rounded-full transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
+            <div className="flex flex-col gap-8">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="group flex items-center justify-between"
+                >
+                  <span className="font-display text-5xl font-bold">{link.name}</span>
+                  <ChevronRight className="w-8 h-8 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-bp-accent" />
+                </Link>
+              ))}
             </div>
 
-            <div className="flex-1 overflow-y-auto py-8 px-6 space-y-8">
+            <div className="mt-auto space-y-12">
+              <div className="h-px bg-bp-border w-full" />
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <span className="block text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Currency</span>
+                  <div className="flex flex-wrap gap-2">
+                    {["KES", "UGX"].map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => setCurrency(c as any)}
+                        className={cn(
+                          "px-6 py-3 rounded-xl text-xs font-bold transition-all border",
+                          currency === c ? "bg-bp-cta border-bp-cta text-bp-cta-text" : "bg-bp-surface border-bp-border text-bp-text-muted"
+                        )}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                   <span className="block text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Account</span>
+                   <Link href="/account" className="flex items-center gap-3 text-bp-text font-medium">
+                      <UserCircle2 className="w-6 h-6" />
+                      Dashboard
+                   </Link>
+                </div>
+              </div>
+
               <div className="space-y-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="flex items-center justify-between text-2xl font-display font-medium group"
-                  >
-                    <span>{link.name}</span>
-                    <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                  </Link>
-                ))}
+                 <span className="block text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Contact Michael</span>
+                 <a href="tel:+254724848228" className="flex items-center gap-4 text-2xl font-bold">
+                    <div className="w-12 h-12 bg-bp-surface rounded-full flex items-center justify-center text-bp-accent border border-bp-border">
+                       <Phone className="w-6 h-6" />
+                    </div>
+                    +254 724 848228
+                 </a>
               </div>
-
-              <div className="pt-8 border-t border-[var(--color-border)] space-y-6">
-                <div>
-                  <p className="text-sm font-medium text-[var(--color-muted)] mb-3">Currency</p>
-                  <CurrencyToggle />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <Link href="/account" className="flex items-center gap-3 p-4 bg-[var(--color-surface)] rounded-xl">
-                    <User className="w-5 h-5" />
-                    <span className="font-medium text-sm">Account</span>
-                  </Link>
-                  <Link href="/cart" className="flex items-center gap-3 p-4 bg-[var(--color-surface)] rounded-xl">
-                    <ShoppingCart className="w-5 h-5" />
-                    <span className="font-medium text-sm">Cart ({mounted ? totalItems : 0})</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <Link href="/menu">
-                <Button fullWidth size="lg">Order Now</Button>
-              </Link>
             </div>
           </motion.div>
         )}

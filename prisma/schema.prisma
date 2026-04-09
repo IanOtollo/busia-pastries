@@ -12,16 +12,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  phone         String?
-  passwordHash  String?
-  role          Role      @default(CUSTOMER)
-  createdAt     DateTime  @default(now())
-  orders        Order[]
-  reviews       Review[]
-  addresses     Address[]
+  id           String             @id @default(cuid())
+  name         String?
+  email        String?            @unique
+  phone        String?
+  passwordHash String?
+  role         Role               @default(CUSTOMER)
+  createdAt    DateTime           @default(now())
+  orders       Order[]
+  reviews      Review[]
+  addresses    Address[]
+  pushSubs     PushSubscription[]
 }
 
 enum Role {
@@ -34,35 +35,36 @@ model Address {
   userId    String
   user      User    @relation(fields: [userId], references: [id])
   label     String
-  line1     String
-  town      String
-  county    String?
+  area      String
+  landmark  String?
   isPrimary Boolean @default(false)
 }
 
 model Order {
-  id              String        @id @default(cuid())
-  userId          String?
-  user            User?         @relation(fields: [userId], references: [id])
-  guestName       String?
-  guestEmail      String?
-  guestPhone      String?
-  items           OrderItem[]
-  subtotalKes     Float
-  deliveryFeeKes  Float         @default(0)
-  totalKes        Float
-  currency        String        @default("KES")
-  displayTotal    Float
-  fulfillment     Fulfillment   @default(DELIVERY)
-  status          OrderStatus   @default(PENDING)
-  mpesaRef        String?
-  mpesaCheckoutId String?
-  paymentStatus   PaymentStatus @default(UNPAID)
-  deliveryAddress String?
-  notes           String?
-  trackingToken   String?       @unique
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  trackingToken    String        @unique @default(cuid())
+  userId           String?
+  user             User?         @relation(fields: [userId], references: [id])
+  guestName        String?
+  guestPhone       String?
+  guestEmail       String?
+  items            OrderItem[]
+  subtotalKes      Float
+  deliveryFeeKes   Float         @default(0)
+  totalKes         Float
+  displayCurrency  String        @default("KES")
+  displayTotal     Float
+  fulfillment      Fulfillment   @default(DELIVERY)
+  deliveryArea     String?
+  deliveryLandmark String?
+  status           OrderStatus   @default(PENDING)
+  paymentStatus    PaymentStatus @default(UNPAID)
+  paymentMethod    PaymentMethod @default(MPESA)
+  mpesaCheckoutId  String?
+  mpesaRef         String?
+  notes            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 enum Fulfillment {
@@ -77,6 +79,7 @@ enum OrderStatus {
   READY
   OUT_FOR_DELIVERY
   DELIVERED
+  COLLECTED
   CANCELLED
 }
 
@@ -84,6 +87,11 @@ enum PaymentStatus {
   UNPAID
   PAID
   REFUNDED
+}
+
+enum PaymentMethod {
+  MPESA
+  CASH
 }
 
 model OrderItem {
@@ -97,6 +105,24 @@ model OrderItem {
   totalPriceKes Float
 }
 
+model CustomOrder {
+  id            String    @id @default(cuid())
+  fullName      String
+  phone         String
+  email         String?
+  occasion      String
+  description   String
+  flavors       String?
+  servings      Int?
+  preferredDate DateTime?
+  fulfillment   String
+  deliveryArea  String?
+  budgetRange   String?
+  notes         String?
+  status        String    @default("NEW")
+  createdAt     DateTime  @default(now())
+}
+
 model Review {
   id         String   @id @default(cuid())
   userId     String?
@@ -108,6 +134,8 @@ model Review {
   isVerified Boolean  @default(false)
   isApproved Boolean  @default(false)
   createdAt  DateTime @default(now())
+
+  @@unique([userId, sanityId])
 }
 
 model PushSubscription {
@@ -116,22 +144,6 @@ model PushSubscription {
   p256dh    String
   auth      String
   userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-}
-
-model CookieConsent {
-  id        String   @id @default(cuid())
-  sessionId String   @unique
-  accepted  Boolean
-  createdAt DateTime @default(now())
-}
-
-model LoginAttempt {
-  id        String   @id @default(cuid())
-  email     String
-  ip        String
-  success   Boolean
-  createdAt DateTime @default(now())
-
-  @@index([email, createdAt])
 }
