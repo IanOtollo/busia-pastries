@@ -20,8 +20,8 @@ export async function FeaturedProducts() {
    * We fetch real products from Sanity. If empty, we show the 
    * "Under Maintenance" state instead of placeholders.
    */
-  const result = await sanityFetch<Product[]>({
-    query: `*[_type == "product" && featured == true][0...4] {
+  const result = await sanityFetch<Product[]>(
+    `*[_type == "product" && featured == true][0...4] {
       _id,
       name,
       slug,
@@ -33,9 +33,8 @@ export async function FeaturedProducts() {
         asset-> { url },
         alt
       }
-    }`,
-    tags: ["product"],
-  });
+    }`
+  );
 
   const products = Array.isArray(result) ? result : [];
 

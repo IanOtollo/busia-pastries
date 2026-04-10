@@ -33,7 +33,7 @@ interface Product {
 }
 
 export default async function MenuPage() {
-  const result = await sanityFetch<Product[]>({ query: ALL_PRODUCTS_QUERY });
+  const result = await sanityFetch<Product[]>(ALL_PRODUCTS_QUERY);
   
   // Ensure we pass an array to MenuClient, even if empty (Zero Mock Data Policy)
   const products = Array.isArray(result) ? result : [];

@@ -11,6 +11,12 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/studio/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
@@ -33,7 +39,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://cdn.sanity.io https://*.supabase.co https://images.unsplash.com",
               "connect-src 'self' https://*.supabase.co https://*.upstash.io https://api.frankfurter.app https://*.sentry.io https://sandbox.safaricom.co.ke https://api.safaricom.co.ke",
-              "frame-src https://www.google.com",
+              "frame-src 'self' https://www.google.com https://*.sanity.io",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

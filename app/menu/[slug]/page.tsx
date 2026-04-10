@@ -34,7 +34,7 @@ interface Product {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = await sanityFetch<Product | null>({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+  const product = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug: params.slug });
   
   // Handle empty array or null (Zero Mock Data Policy)
   if (!product || (Array.isArray(product) && product.length === 0)) {
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const result = await sanityFetch<Product | null>({ query: PRODUCT_QUERY, params: { slug: params.slug } });
+  const result = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug: params.slug });
 
   // Handle empty array or null
   if (!result || (Array.isArray(result) && result.length === 0)) {
