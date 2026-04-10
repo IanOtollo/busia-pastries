@@ -48,10 +48,10 @@ export async function POST(req: Request) {
       { success: true, message: "User registered successfully", userId: user.id },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { success: false, error: "An unexpected error occurred" },
+      { success: false, error: error?.message || "An unexpected error occurred" },
       { status: 500 }
     );
   }
