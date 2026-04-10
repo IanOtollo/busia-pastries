@@ -90,8 +90,8 @@ export async function initiateStkPush(
     PartyB: shortcode,
     PhoneNumber: phone,
     CallBackURL: callbackUrl,
-    AccountReference: `BP-${orderId.slice(-8).toUpperCase()}`,
-    TransactionDesc: "Busia Pastries Order",
+    AccountReference: `CP-${orderId.slice(-8).toUpperCase()}`,
+    TransactionDesc: "Clare Pastries Order",
   };
 
   const res = await fetch(

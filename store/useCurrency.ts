@@ -23,21 +23,35 @@ export const useCurrency = create<CurrencyState>()(
       },
 
       fetchRate: async () => {
-        const { lastUpdated } = get();
+        const { lastUpdated, rate: currentRate } = get();
         const oneHour = 60 * 60 * 1000;
 
-        // Cache for 1 hour
-        if (Date.now() - lastUpdated < oneHour) return;
+        // Cache for 1 hour to prevent excessive calls
+        if (Date.now() - lastUpdated < oneHour && lastUpdated !== 0) return;
 
         try {
           // Frankfurter API doesn't require a key
-          const res = await fetch("https://api.frankfurter.app/latest?from=KES&to=UGX");
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+          const res = await fetch("https://api.frankfurter.app/latest?from=KES&to=UGX", {
+             signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+
+          if (!res.ok) throw new Error("API_ERROR");
+
           const data = await res.json();
           if (data.rates?.UGX) {
             set({ rate: data.rates.UGX, lastUpdated: Date.now() });
           }
         } catch (error) {
-          console.error("Failed to fetch currency rate:", error);
+          console.warn("Currency fetch failed, using fallback:", error);
+          // Don't throw, just keep the current rate (stale-while-revalidate fallback)
+          if (lastUpdated === 0) {
+             set({ lastUpdated: Date.now() - (oneHour / 2) }); // Retry sooner if never fetched
+          }
         }
       },
 

@@ -17,7 +17,7 @@ export function ProductGallery({ images, mainImage }: ProductGalleryProps) {
 
   if (allImages.length === 0) {
     return (
-      <div className="aspect-square bg-[var(--color-surface)] rounded-2xl flex items-center justify-center text-[var(--color-muted)]">
+      <div className="aspect-square bg-cp-surface rounded-3xl flex items-center justify-center text-cp-text-muted italic border border-cp-border shadow-inner">
         No image available
       </div>
     );
@@ -26,9 +26,9 @@ export function ProductGallery({ images, mainImage }: ProductGalleryProps) {
   const selectedImage = allImages[activeIndex];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       {/* Main Image */}
-      <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-[var(--color-border)] shadow-sm">
+      <div className="relative aspect-square rounded-[2.5rem] overflow-hidden bg-white border border-cp-border shadow-2xl shadow-cp-accent/5">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -58,9 +58,9 @@ export function ProductGallery({ images, mainImage }: ProductGalleryProps) {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={cn(
-                "relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0",
+                "relative w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all flex-shrink-0",
                 activeIndex === index
-                  ? "border-[var(--color-accent)] scale-105 shadow-md"
+                  ? "border-cp-accent scale-105 shadow-lg shadow-cp-accent/20"
                   : "border-transparent opacity-60 hover:opacity-100"
               )}
             >

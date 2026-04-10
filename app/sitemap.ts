@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://busiapastries.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://clarepastries.com";
 
   // Static routes
   const routes = ["", "/menu", "/about", "/contact", "/privacy-policy", "/terms"].map(

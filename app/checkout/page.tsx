@@ -78,7 +78,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-bp-bg">
+    <div className="min-h-screen pt-32 pb-24 bg-cp-bg">
       <div className="container mx-auto px-4 md:px-6">
         {/* Baking Journey Stepper */}
         <div className="max-w-4xl mx-auto mb-16">
@@ -148,6 +148,7 @@ export default function CheckoutPage() {
                 <StepPayment 
                   data={formData} 
                   orderId={orderId}
+                  amountKes={getTotal() + (formData.fulfillment === "DELIVERY" ? 100 : 0)}
                   onNext={nextStep} 
                 />
               </motion.div>

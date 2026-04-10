@@ -1,4 +1,4 @@
-// Shared TypeScript types for the Busia Pastries application
+// Shared TypeScript types for the Clare Pastries application
 
 // ── Sanity ──────────────────────────────────────────────
 export interface SanityImageAsset {

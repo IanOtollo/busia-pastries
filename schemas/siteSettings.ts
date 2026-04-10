@@ -9,7 +9,7 @@ export default defineType({
       name: 'businessName',
       title: 'Business Name',
       type: 'string',
-      initialValue: 'Busia Pastries',
+      initialValue: 'Clare Pastries',
     }),
     defineField({
       name: 'phone',

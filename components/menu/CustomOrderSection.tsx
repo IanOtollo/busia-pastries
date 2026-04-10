@@ -73,21 +73,21 @@ export function CustomOrderSection() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-bp-surface border border-bp-border rounded-3xl p-12 text-center space-y-6 max-w-2xl mx-auto"
+        className="bg-cp-surface border border-cp-border rounded-3xl p-12 text-center space-y-6 max-w-2xl mx-auto shadow-xl"
       >
-        <div className="w-20 h-20 bg-bp-success/10 text-bp-success rounded-full flex items-center justify-center mx-auto">
+        <div className="w-20 h-20 bg-cp-success/10 text-cp-success rounded-full flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-10 h-10" />
         </div>
         <div className="space-y-3">
-          <h3 className="font-display text-4xl font-bold text-bp-text">Request Received!</h3>
-          <p className="text-bp-text-muted leading-relaxed">
-            Thank you for your custom order request. Michael will contact you within 24 hours on 
-            <span className="font-bold text-bp-accent ml-1">+254 724 848228</span>.
+          <h3 className="font-display text-4xl font-bold text-cp-text">Request Received!</h3>
+          <p className="text-cp-text-muted leading-relaxed font-body">
+            Thank you for your custom order request. Clare will contact you within 24 hours on 
+            <span className="font-bold text-cp-accent ml-1">+254 724 848228</span>.
           </p>
         </div>
         <button 
           onClick={() => setIsSuccess(false)}
-          className="btn-primary"
+          className="btn-primary rounded-full px-12"
         >
           Send Another Request
         </button>
@@ -100,50 +100,51 @@ export function CustomOrderSection() {
       <div className="flex flex-col md:flex-row gap-16 items-start">
         {/* Left: Content */}
         <div className="md:w-1/3 space-y-6">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-bp-accent">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">
             Bespoke
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-bp-text leading-tight">
-             Order Something Made Just for You
+          <h2 className="text-4xl md:text-6xl font-black text-cp-text leading-[0.9] uppercase italic tracking-tighter">
+             Order <br />
+             <span className="text-cp-accent not-italic">Just for You.</span>
           </h2>
-          <p className="text-bp-text-muted leading-relaxed font-body">
-             From wedding cakes to themed birthday pastries — describe your vision and Michael will get back to you with a custom quote and design.
+          <p className="text-cp-text-muted leading-relaxed font-body text-lg">
+             From wedding cakes to themed birthday pastries — describe your vision and Clare will get back to you with a custom quote and design.
           </p>
           <div className="space-y-4 pt-4">
-             <div className="flex items-center gap-3 text-sm font-medium">
-                <CheckCircle2 className="w-5 h-5 text-bp-accent" />
-                Hand-crafted by Michael Aderi
+             <div className="flex items-center gap-3 text-sm font-medium text-cp-text">
+                <CheckCircle2 className="w-5 h-5 text-cp-accent" />
+                Hand-crafted by Clare
              </div>
-             <div className="flex items-center gap-3 text-sm font-medium">
-                <CheckCircle2 className="w-5 h-5 text-bp-accent" />
+             <div className="flex items-center gap-3 text-sm font-medium text-cp-text">
+                <CheckCircle2 className="w-5 h-5 text-cp-accent" />
                 Premium local ingredients
              </div>
-             <div className="flex items-center gap-3 text-sm font-medium">
-                <CheckCircle2 className="w-5 h-5 text-bp-accent" />
+             <div className="flex items-center gap-3 text-sm font-medium text-cp-text">
+                <CheckCircle2 className="w-5 h-5 text-cp-accent" />
                 Prompt response within 24 hours
              </div>
           </div>
         </div>
 
         {/* Right: Form */}
-        <div className="md:w-2/3 w-full bg-white border border-bp-border rounded-3xl p-8 md:p-12 shadow-sm">
+        <div className="md:w-2/3 w-full bg-white border border-cp-border rounded-3xl p-8 md:p-12 shadow-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Full Name*</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Full Name*</label>
                 <input 
                   {...register("fullName")}
-                  className={cn("w-full bg-bp-surface border rounded-md px-4 py-3 text-sm", errors.fullName ? "border-bp-error" : "border-bp-border")}
+                  className={cn("w-full bg-cp-surface border rounded-xl px-4 py-4 text-sm focus:ring-2 focus:ring-cp-accent outline-none", errors.fullName ? "border-cp-error" : "border-cp-border")}
                   placeholder="e.g. Sarah Wanjiku"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Phone Number*</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Phone Number*</label>
                 <div className="relative">
-                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted" />
+                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
                    <input 
                      {...register("phone")}
-                     className={cn("w-full bg-bp-surface border rounded-md pl-11 pr-4 py-3 text-sm", errors.phone ? "border-bp-error" : "border-bp-border")}
+                     className={cn("w-full bg-cp-surface border rounded-xl pl-11 pr-4 py-4 text-sm focus:ring-2 focus:ring-cp-accent outline-none", errors.phone ? "border-cp-error" : "border-cp-border")}
                      placeholder="+254 700 000000"
                    />
                 </div>
@@ -152,10 +153,10 @@ export function CustomOrderSection() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <div className="space-y-2">
-                  <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Occasion*</label>
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Occasion*</label>
                   <select 
                     {...register("occasion")}
-                    className="w-full bg-bp-surface border border-bp-border rounded-md px-4 py-3 text-sm appearance-none"
+                    className="w-full bg-cp-surface border border-cp-border rounded-xl px-4 py-4 text-sm appearance-none outline-none focus:ring-2 focus:ring-cp-accent"
                   >
                     <option value="">Select an occasion</option>
                     <option value="Birthday">Birthday</option>
@@ -167,52 +168,52 @@ export function CustomOrderSection() {
                   </select>
                </div>
                <div className="space-y-2">
-                  <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Preferred Date*</label>
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Preferred Date*</label>
                   <div className="relative">
-                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted" />
+                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
                      <input 
                        type="date"
                        {...register("preferredDate")}
                        min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
-                       className={cn("w-full bg-bp-surface border rounded-md pl-11 pr-4 py-3 text-sm", errors.preferredDate ? "border-bp-error" : "border-bp-border")}
+                       className={cn("w-full bg-cp-surface border rounded-xl pl-11 pr-4 py-4 text-sm focus:ring-2 focus:ring-cp-accent outline-none", errors.preferredDate ? "border-cp-error" : "border-cp-border")}
                      />
                   </div>
                </div>
             </div>
 
             <div className="space-y-2">
-               <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Cake/Pastry Type*</label>
+               <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Cake/Pastry Type*</label>
                <div className="relative">
-                  <Cake className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted" />
+                  <Cake className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
                   <input 
                     {...register("type")}
-                    className={cn("w-full bg-bp-surface border rounded-md pl-11 pr-4 py-3 text-sm", errors.type ? "border-bp-error" : "border-bp-border")}
+                    className={cn("w-full bg-cp-surface border rounded-xl pl-11 pr-4 py-4 text-sm focus:ring-2 focus:ring-cp-accent outline-none", errors.type ? "border-cp-error" : "border-cp-border")}
                     placeholder="e.g. 3-tier vanilla sponge with fondant flowers"
                   />
                </div>
             </div>
 
             <div className="space-y-2">
-               <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Flavors & Preferences (Optional)</label>
+               <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Flavors & Preferences (Optional)</label>
                <textarea 
                  {...register("flavors")}
-                 className="w-full bg-bp-surface border border-bp-border rounded-md px-4 py-3 text-sm min-h-[100px]"
+                 className="w-full bg-cp-surface border border-cp-border rounded-xl px-4 py-4 text-sm min-h-[120px] outline-none focus:ring-2 focus:ring-cp-accent"
                  placeholder="Dietary needs, allergies, favorite flavors..."
                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
                <div className="space-y-4">
-                  <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Fulfillment*</label>
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Fulfillment*</label>
                   <div className="flex gap-4">
                      {["DELIVERY", "PICKUP"].map((f) => (
                         <button
                           key={f}
                           type="button"
-                          onClick={() => setIsSubmitting(false)} // This is just a dummy to avoid build warn
+                          onClick={() => {}} 
                           className={cn(
-                            "flex-1 py-4 border-2 rounded-xl text-[10px] font-bold tracking-widest transition-all",
-                            fulfillment === f ? "border-bp-accent bg-bp-accent/5" : "border-bp-border"
+                            "flex-1 py-5 border rounded-2xl text-[10px] font-black tracking-widest transition-all uppercase",
+                            fulfillment === f ? "border-cp-accent bg-cp-accent/5 text-cp-accent" : "border-cp-border text-cp-text-muted"
                           )}
                         >
                            {f}
@@ -223,10 +224,10 @@ export function CustomOrderSection() {
                </div>
                
                <div className="space-y-4">
-                  <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Budget Range*</label>
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Budget Range*</label>
                   <select 
                     {...register("budgetRange")}
-                    className="w-full bg-bp-surface border border-bp-border rounded-md px-4 py-3 text-sm appearance-none"
+                    className="w-full bg-cp-surface border border-cp-border rounded-xl px-4 py-5 text-[10px] font-black tracking-widest uppercase appearance-none outline-none focus:ring-2 focus:ring-cp-accent"
                   >
                     <option value="">Select budget range</option>
                     <option value="Under KES 1,000">Under KES 1,000</option>
@@ -240,12 +241,12 @@ export function CustomOrderSection() {
 
             {fulfillment === "DELIVERY" && (
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                   <label className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Delivery Area/Location*</label>
+                   <label className="text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Delivery Area/Location*</label>
                    <div className="relative">
-                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bp-text-muted" />
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
                       <input 
                         {...register("location")}
-                        className="w-full bg-bp-surface border border-bp-border rounded-md pl-11 pr-4 py-3 text-sm"
+                        className="w-full bg-cp-surface border border-cp-border rounded-xl pl-11 pr-4 py-4 text-sm outline-none focus:ring-2 focus:ring-cp-accent"
                         placeholder="e.g. Near Busia Market, Opposite Post Office"
                       />
                    </div>
@@ -256,12 +257,12 @@ export function CustomOrderSection() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-primary w-full flex items-center justify-center gap-3"
+                className="btn-primary w-full flex items-center justify-center gap-4 py-6 rounded-full font-black uppercase tracking-widest"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Sending Request...
+                    Baking Your Request...
                   </>
                 ) : (
                   "Send My Custom Order Request →"

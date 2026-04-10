@@ -39,14 +39,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   // Handle empty array or null (Zero Mock Data Policy)
   if (!product || (Array.isArray(product) && product.length === 0)) {
-    return { title: "Product Not Found | Busia Pastries" };
+    return { title: "Product Not Found | Clare Pastries" };
   }
 
   // Safe cast since we checked for empty array
   const p = product as Product;
 
   return {
-    title: `${p.name} | Busia Pastries`,
+    title: `${p.name} | Clare Pastries`,
     description: p.description,
   };
 }
@@ -58,10 +58,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Handle empty array or null
   if (!result || (Array.isArray(result) && result.length === 0)) {
     return (
-       <div className="min-h-screen pt-40 pb-20 text-center">
+       <div className="min-h-screen pt-40 pb-20 text-center bg-cp-bg">
           <div className="container mx-auto px-4">
-             <h1 className="font-display text-4xl font-bold">Pastry Not Found</h1>
-             <p className="mt-4 text-bp-text-muted">We couldn&apos;t find the artisan bake you&apos;re looking for.</p>
+             <h1 className="font-display text-4xl font-bold text-cp-text">Pastry Not Found</h1>
+             <p className="mt-4 text-cp-text-muted">We couldn&apos;t find the artisan bake you&apos;re looking for.</p>
           </div>
        </div>
     );

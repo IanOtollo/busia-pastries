@@ -15,18 +15,18 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: "bg-[var(--color-surface)] text-[var(--color-muted)]",
-  success: "bg-emerald-100 text-emerald-800",
-  warning: "bg-amber-100 text-amber-800",
-  danger: "bg-rose-100 text-rose-800",
-  accent: "bg-[var(--color-accent)] text-[var(--color-cta-text)] font-mono",
+  default: "bg-cp-surface text-cp-text-muted border border-cp-border",
+  success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+  warning: "bg-amber-50 text-amber-700 border border-amber-100",
+  danger: "bg-rose-50 text-rose-700 border border-rose-100",
+  accent: "bg-cp-accent text-cp-cta-text font-mono font-bold shadow-sm shadow-cp-accent/20",
 };
 
 export function Badge({ children, variant = "default", className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-widest italic",
         variantClasses[variant],
         className
       )}

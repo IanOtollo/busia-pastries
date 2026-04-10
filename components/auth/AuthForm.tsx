@@ -65,12 +65,16 @@ export function AuthForm({ mode }: AuthFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-8 animate-fade-in">
-      <div className="text-center space-y-2">
-        <h1 className="font-display text-4xl font-bold text-[var(--color-text)]">
-          {mode === "login" ? "Welcome Back" : "Create Account"}
+    <div className="w-full max-w-md mx-auto space-y-10 animate-fade-in">
+      <div className="text-center space-y-3">
+        <h1 className="font-display text-4xl font-bold text-cp-text uppercase tracking-tight italic">
+          {mode === "login" ? (
+             <><span className="text-cp-accent border-b-2 border-cp-accent/20">Welcome</span> <span className="text-cp-cta not-italic">Back.</span></>
+          ) : (
+             <><span className="text-cp-accent border-b-2 border-cp-accent/20">Create</span> <span className="text-cp-cta not-italic">Account.</span></>
+          )}
         </h1>
-        <p className="text-[var(--color-muted)]">
+        <p className="text-[10px] font-bold text-cp-text uppercase tracking-[0.2em] italic opacity-70">
           {mode === "login" 
             ? "Fresh pastries and rewards are waiting." 
             : "Join our community for faster checkout and exclusive offers."}
@@ -78,15 +82,15 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-100 rounded-xl flex items-start gap-3 text-rose-800 text-sm animate-shake">
-          <AlertCircle className="w-5 h-5 shrink-0 text-rose-500" />
+        <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-start gap-3 text-rose-800 text-xs font-medium animate-shake italic">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
           <p>{error}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {mode === "register" && (
-          <div className="space-y-5 animate-slide-up">
+          <div className="space-y-6 animate-slide-up">
             <Input
               label="Full Name"
               placeholder="John Doe"
@@ -119,7 +123,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           icon={<Mail className="w-4 h-4" />}
         />
 
-        <div className="space-y-1">
+        <div className="space-y-2">
           <Input
             label="Password"
             type="password"
@@ -132,14 +136,14 @@ export function AuthForm({ mode }: AuthFormProps) {
           />
           {mode === "login" && (
              <div className="flex justify-end">
-                <Link href="/auth/forgot-password" className="text-xs font-bold text-[var(--color-accent)] hover:underline">
+                <Link href="/auth/forgot-password" className="text-[10px] font-bold text-cp-accent uppercase tracking-widest hover:underline italic">
                    Forgot Password?
                 </Link>
              </div>
           )}
         </div>
 
-        <Button fullWidth size="lg" type="submit" disabled={isLoading} className="h-14 font-bold text-lg group">
+        <Button fullWidth size="lg" type="submit" disabled={isLoading} className="h-14 font-black uppercase text-xs tracking-[0.2em] shadow-xl group">
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin mx-auto" />
           ) : (
@@ -152,11 +156,11 @@ export function AuthForm({ mode }: AuthFormProps) {
       </form>
 
       <div className="text-center">
-        <p className="text-sm text-[var(--color-muted)] font-medium">
+        <p className="text-[10px] text-cp-text-muted font-bold uppercase tracking-widest italic">
           {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
           <Link 
             href={mode === "login" ? "/auth/register" : "/auth/login"}
-            className="text-[var(--color-accent)] font-bold hover:underline"
+            className="text-cp-accent hover:underline not-italic"
           >
             {mode === "login" ? "Create one here" : "Sign in instead"}
           </Link>
@@ -164,10 +168,10 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {mode === "login" && (
-        <div className="pt-8 border-t border-[var(--color-border)]">
-           <p className="text-center text-xs text-[var(--color-muted)] font-bold uppercase tracking-[0.2em] mb-4">Or Continue Guest</p>
+        <div className="pt-10 border-t border-cp-border">
+           <p className="text-center text-[10px] text-cp-text-muted font-bold uppercase tracking-[0.2em] mb-6 italic">Or Continue Guest</p>
            <Link href="/checkout">
-              <Button fullWidth variant="outline" className="h-12 border-dashed">
+              <Button fullWidth variant="outline" className="h-14 border-dashed font-black uppercase text-xs tracking-[0.2em]">
                  Checkout as Guest
               </Button>
            </Link>

@@ -54,7 +54,7 @@ export async function sendOrderConfirmationEmail({
     <!-- Header -->
     <div style="background:#2C1810;padding:32px 40px;text-align:center;">
       <h1 style="margin:0;color:#FAF7F2;font-size:24px;font-weight:400;letter-spacing:0.5px;">
-        Busia Pastries
+        Clare Pastries
       </h1>
       <p style="margin:8px 0 0;color:#B8892A;font-size:13px;letter-spacing:1px;text-transform:uppercase;">
         Order Confirmed
@@ -65,7 +65,7 @@ export async function sendOrderConfirmationEmail({
     <div style="padding:40px;">
       <p style="color:#1C1612;font-size:16px;margin:0 0 24px;">
         Hi ${customerName},<br><br>
-        Thank you for your order! We're already preparing it fresh for you.
+        Thank you for your order! Clare is already preparing it fresh for you with so much love.
       </p>
 
       <!-- Order ID -->
@@ -114,8 +114,8 @@ export async function sendOrderConfirmationEmail({
     <!-- Footer -->
     <div style="background:#F0EBE1;padding:24px 40px;text-align:center;">
       <p style="margin:0;color:#7A6E64;font-size:12px;">
-        Bakia Pastries · Busia Town, Kenya<br>
-        &copy; 2025 Busia Pastries. All rights reserved.
+        Clare Pastries · Busia Town, Kenya<br>
+        &copy; 2026 Clare Pastries. All rights reserved.
       </p>
     </div>
   </div>
@@ -123,7 +123,7 @@ export async function sendOrderConfirmationEmail({
 </html>`;
 
   await resend.emails.send({
-    from: "Busia Pastries <orders@busiapastries.co.ke>",
+    from: "Clare Pastries <orders@clarepastries.co.ke>",
     to,
     subject: `Order Confirmed — #${orderId.slice(-8).toUpperCase()}`,
     html,

@@ -4,7 +4,7 @@ import { getCachedData, setCachedData } from '@/lib/redis'
 import { SiteSettings } from '@/lib/sanity/types'
 
 export const defaultSettings: SiteSettings = {
-  businessName: 'Busia Pastries',
+  businessName: 'Clare Pastries',
   phone: '+254724848228',
   location: 'Busia Town, Kenya',
   deliveryFeeKes: 100,

@@ -2,76 +2,23 @@
 
 import React, { useState } from "react";
 import { Smartphone, Banknote, Loader2, CheckCircle2, ChevronRight, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import toast from "react-hot-toast";
 import { CheckoutFormData } from "@/types/checkout";
 
+import { PayHeroPayment } from "./PayHeroPayment";
+
 interface StepPaymentProps {
   data: CheckoutFormData;
   orderId: string;
+  amountKes: number;
   onNext: () => void;
 }
 
-export function StepPayment({ data, orderId, onNext }: StepPaymentProps) {
+export function StepPayment({ data, orderId, amountKes, onNext }: StepPaymentProps) {
   const [method, setMethod] = useState<"MPESA" | "CASH">("MPESA");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<"IDLE" | "POLLING" | "SUCCESS" | "FAILED">("IDLE");
-
-  const initiateMpesa = async () => {
-    setIsProcessing(true);
-    setPaymentStatus("POLLING");
-    
-    try {
-      const res = await fetch("/api/checkout/mpesa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, phone: data.phone }),
-      });
-      
-      const resData = (await res.json()) as { success: boolean; error?: string; checkoutId: string };
-      if (!resData.success) throw new Error(resData.error || "STK Push failed");
-
-      toast.success("M-Pesa prompt sent to your phone!");
-      
-      // Poll for status
-      startPolling(resData.checkoutId);
-    } catch (error: unknown) {
-      setIsProcessing(false);
-      setPaymentStatus("FAILED");
-      toast.error(error instanceof Error ? error.message : "Payment failed");
-    }
-  };
-
-  const startPolling = async (checkoutId: string) => {
-    let attempts = 0;
-    const maxAttempts = 20; // ~60 seconds
-
-    const interval = setInterval(async () => {
-      attempts++;
-      if (attempts > maxAttempts) {
-        clearInterval(interval);
-        setPaymentStatus("FAILED");
-        setIsProcessing(false);
-        toast.error("Payment timeout. Please check your phone or try again.");
-        return;
-      }
-
-      try {
-        const res = await fetch(`/api/checkout/mpesa/status?checkoutId=${checkoutId}`);
-        const statusData = await res.json();
-        
-        if (statusData.status === "PAID") {
-          clearInterval(interval);
-          setPaymentStatus("SUCCESS");
-          setIsProcessing(false);
-          toast.success("Payment confirmed!");
-          setTimeout(onNext, 1500);
-        }
-      } catch {
-        // Continue polling
-      }
-    }, 3000);
-  };
 
   const handleCashOrder = () => {
     setIsProcessing(true);
@@ -82,34 +29,40 @@ export function StepPayment({ data, orderId, onNext }: StepPaymentProps) {
   };
 
   return (
-    <div className="space-y-12 animate-fade-in">
+    <div className="space-y-12 animate-fade-in relative z-10">
       <div className="space-y-4">
-        <h2 className="font-display text-4xl font-bold text-bp-text">Payment</h2>
-        <p className="text-sm text-bp-text-muted">Choose your preferred payment method.</p>
+        <h2 className="font-display text-5xl md:text-7xl font-black text-cp-text leading-[0.9] tracking-tighter uppercase italic">
+          Payment <br />
+          <span className="text-cp-accent not-italic">Gateway.</span>
+        </h2>
+        <p className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">Choose your preferred path</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
          {/* M-Pesa Option */}
          <button
             disabled={isProcessing}
             onClick={() => setMethod("MPESA")}
             className={cn(
-              "flex flex-col items-start p-8 rounded-2xl border-2 transition-all text-left",
+              "group relative flex flex-col items-start p-10 rounded-3xl border transition-all text-left overflow-hidden",
               method === "MPESA"
-                ? "border-bp-cta bg-bp-cta/5 ring-1 ring-bp-cta shadow-md"
-                : "border-bp-border bg-white hover:border-bp-text-muted"
+                ? "border-cp-accent bg-white shadow-2xl ring-1 ring-cp-accent/20"
+                : "border-cp-border bg-cp-surface hover:border-cp-accent/30 hover:shadow-xl"
             )}
           >
             <div className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-colors",
-              method === "MPESA" ? "bg-[#3A6B35] text-white" : "bg-bp-surface text-bp-text-muted"
+              "w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500",
+              method === "MPESA" ? "bg-cp-accent text-white scale-110 shadow-lg shadow-cp-accent/20" : "bg-cp-border text-cp-text-muted"
             )}>
-              <Smartphone className="w-6 h-6" />
+              <Smartphone className="w-7 h-7" />
             </div>
-            <h3 className="font-bold text-lg text-bp-text">M-Pesa STK Push</h3>
-            <p className="text-sm text-bp-text-muted mt-2 leading-relaxed">
-              Securely pay using your Safaricom M-Pesa. A prompt will appear on your phone.
+            <h3 className="font-display text-2xl font-bold text-cp-text uppercase tracking-tight italic">M-Pesa <span className="text-cp-accent not-italic">Express.</span></h3>
+            <p className="text-xs font-medium text-cp-text-muted mt-3 leading-relaxed italic">
+              Instant activation via STK Push. Securely handled by PayHero.
             </p>
+            {method === "MPESA" && (
+              <motion.div layoutId="active-pill" className="absolute top-4 right-4 w-2 h-2 rounded-full bg-cp-accent shadow-sm shadow-cp-accent/50" />
+            )}
          </button>
 
          {/* Cash Option */}
@@ -117,73 +70,58 @@ export function StepPayment({ data, orderId, onNext }: StepPaymentProps) {
             disabled={isProcessing}
             onClick={() => setMethod("CASH")}
             className={cn(
-              "flex flex-col items-start p-8 rounded-2xl border-2 transition-all text-left",
+              "group relative flex flex-col items-start p-10 rounded-3xl border transition-all text-left overflow-hidden",
               method === "CASH"
-                ? "border-bp-cta bg-bp-cta/5 ring-1 ring-bp-cta shadow-md"
-                : "border-bp-border bg-white hover:border-bp-text-muted"
+                ? "border-cp-accent bg-white shadow-2xl ring-1 ring-cp-accent/20"
+                : "border-cp-border bg-cp-surface hover:border-cp-accent/30 hover:shadow-xl"
             )}
           >
             <div className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-colors",
-              method === "CASH" ? "bg-bp-cta text-bp-cta-text" : "bg-bp-surface text-bp-text-muted"
+              "w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500",
+              method === "CASH" ? "bg-cp-accent text-white scale-110 shadow-lg shadow-cp-accent/20" : "bg-cp-border text-cp-text-muted"
             )}>
-              <Banknote className="w-6 h-6" />
+              <Banknote className="w-7 h-7" />
             </div>
-            <h3 className="font-bold text-lg text-bp-text">Cash on Fulfillment</h3>
-            <p className="text-sm text-bp-text-muted mt-2 leading-relaxed">
-              Pay in cash upon delivery or pickup.
+            <h3 className="font-display text-2xl font-bold text-cp-text uppercase tracking-tight italic">Cash on <span className="text-cp-accent not-italic">Fulfillment.</span></h3>
+            <p className="text-xs font-medium text-cp-text-muted mt-3 leading-relaxed italic">
+              Pay upon collection or delivery. Simple and transparent.
             </p>
+            {method === "CASH" && (
+              <motion.div layoutId="active-pill" className="absolute top-4 right-4 w-2 h-2 rounded-full bg-cp-accent shadow-sm shadow-cp-accent/50" />
+            )}
          </button>
       </div>
 
-      {method === "MPESA" && (
-        <div className="p-8 bg-white border border-bp-border rounded-2xl space-y-8">
-           {paymentStatus === "POLLING" ? (
-             <div className="flex flex-col items-center justify-center py-8 text-center space-y-6">
-                <Loader2 className="w-12 h-12 text-bp-accent animate-spin" />
-                <div className="space-y-2">
-                   <h4 className="font-bold text-lg">Waiting for M-Pesa...</h4>
-                   <p className="text-sm text-bp-text-muted">Please enter your PIN on your phone ({data.phone}).</p>
-                </div>
-             </div>
-           ) : paymentStatus === "SUCCESS" ? (
-              <div className="flex flex-col items-center justify-center py-8 text-center space-y-6">
-                 <CheckCircle2 className="w-12 h-12 text-bp-success" />
-                 <h4 className="font-bold text-lg">Payment Confirmed!</h4>
-              </div>
-           ) : (
-              <div className="space-y-6">
-                 <div className="flex items-center gap-4 p-4 bg-bp-bg rounded-xl border border-bp-border">
-                    <AlertCircle className="w-5 h-5 text-bp-accent" />
-                    <p className="text-xs text-bp-text-muted leading-relaxed">
-                       Ensure your phone is unlocked and ready to receive the M-Pesa prompt.
-                    </p>
-                 </div>
-                 <button
-                    onClick={initiateMpesa}
-                    disabled={isProcessing}
-                    className="btn-primary w-full flex items-center justify-center gap-3"
-                 >
-                    Send M-Pesa Prompt
-                    <ChevronRight className="w-5 h-5" />
-                 </button>
-              </div>
-           )}
-        </div>
-      )}
+      <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+        {method === "MPESA" && (
+           <PayHeroPayment 
+              amountKes={amountKes} 
+              orderId={orderId} 
+              customerPhone={data.phone} 
+              onSuccess={onNext} 
+           />
+        )}
 
-      {method === "CASH" && (
-         <div className="space-y-6">
-            <button
-               onClick={handleCashOrder}
-               disabled={isProcessing}
-               className="btn-primary w-full flex items-center justify-center gap-3"
-            >
-               Confirm Order (Cash)
-               <ChevronRight className="w-5 h-5" />
-            </button>
-         </div>
-      )}
+        {method === "CASH" && (
+           <div className="bg-white border border-cp-border/50 rounded-3xl p-10 space-y-8 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-cp-accent/5 rounded-full -mr-16 -mt-16 blur-3xl" />
+              <div className="flex items-center gap-4 p-6 bg-cp-surface rounded-2xl border border-cp-border shadow-inner">
+                 <AlertCircle className="w-6 h-6 text-cp-accent shrink-0" />
+                 <p className="text-sm font-medium text-cp-text-muted leading-relaxed italic">
+                    You've selected Cash payment. Please ensure you have the exact amount ready upon delivery or collection for a smooth experience.
+                 </p>
+              </div>
+              <button
+                 onClick={handleCashOrder}
+                 disabled={isProcessing}
+                 className="btn-primary w-full flex items-center justify-center gap-4 py-6 rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-xl active:scale-[0.98] transition-all"
+              >
+                 Confirm Order (Cash)
+                 <ChevronRight className="w-6 h-6" />
+              </button>
+           </div>
+        )}
+      </div>
     </div>
   );
 }

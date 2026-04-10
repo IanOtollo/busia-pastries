@@ -1,4 +1,6 @@
-# Busia Pastries 🍰
+# Clare Pastries
+
+Artisan Bakery in Busia, Kenya.
 
 A production-grade artisan pastry e-commerce platform built with **Next.js 15**, **Sanity CMS**, **Supabase PostgreSQL**, and **M-Pesa** payments.
 

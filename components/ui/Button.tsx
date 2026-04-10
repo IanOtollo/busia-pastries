@@ -13,34 +13,35 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: [
-    "bg-[var(--color-cta)] text-[var(--color-cta-text)]",
+    "bg-cp-cta text-cp-cta-text",
     "hover:opacity-90 hover:-translate-y-0.5",
     "active:translate-y-0 active:opacity-80",
-    "shadow-sm hover:shadow-md",
+    "shadow-lg hover:shadow-xl shadow-cp-cta/20",
   ].join(" "),
   secondary: [
-    "bg-[var(--color-accent)] text-[var(--color-cta-text)]",
-    "hover:bg-[var(--color-accent-hover)] hover:-translate-y-0.5",
+    "bg-cp-accent text-cp-cta-text",
+    "hover:opacity-90 hover:-translate-y-0.5",
+    "shadow-lg hover:shadow-xl shadow-cp-accent/20",
   ].join(" "),
   outline: [
-    "border border-[var(--color-cta)] text-[var(--color-cta)]",
-    "hover:bg-[var(--color-cta)] hover:text-[var(--color-cta-text)] hover:-translate-y-0.5",
+    "border-2 border-cp-cta text-cp-cta",
+    "hover:bg-cp-cta hover:text-cp-cta-text hover:-translate-y-0.5",
     "bg-transparent",
   ].join(" "),
   ghost: [
-    "text-[var(--color-text)] bg-transparent",
-    "hover:bg-[var(--color-surface)] hover:text-[var(--color-cta)]",
+    "text-cp-text bg-transparent",
+    "hover:bg-cp-surface hover:text-cp-cta",
   ].join(" "),
   danger: [
-    "bg-red-600 text-white",
-    "hover:bg-red-700 hover:-translate-y-0.5",
+    "bg-rose-600 text-white",
+    "hover:bg-rose-700 hover:-translate-y-0.5 shadow-lg shadow-rose-200",
   ].join(" "),
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm rounded-md gap-1.5",
-  md: "h-10 px-5 text-sm rounded-lg gap-2",
-  lg: "h-12 px-7 text-base rounded-xl gap-2.5",
+  sm: "h-9 px-4 text-[10px] rounded-xl gap-2",
+  md: "h-11 px-6 text-xs rounded-2xl gap-2.5",
+  lg: "h-14 px-8 text-sm rounded-[1.25rem] gap-3",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -63,9 +64,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         className={cn(
           // Base
-          "inline-flex items-center justify-center font-body font-medium",
-          "transition-all duration-200 cursor-pointer select-none",
-          "focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-2",
+          "inline-flex items-center justify-center font-display font-black uppercase tracking-[0.2em] italic",
+          "transition-all duration-300 cursor-pointer select-none",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cp-accent focus-visible:ring-offset-2",
           "disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none",
           // Variant
           variantClasses[variant],

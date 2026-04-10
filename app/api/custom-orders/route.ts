@@ -24,13 +24,13 @@ export async function POST(req: Request) {
       }
     });
 
-    // 2. Notify Michael via Email (Resend)
+    // 2. Notify Clare via Email (Resend)
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
-        from: "Busia Pastries <orders@busiapastries.co.ke>", // Requires verified domain
-        to: "michael@busiapastries.co.ke", // Michael's email from spec
-        subject: `New Custom Order Request - ${data.fullName}`,
+        from: "Clare Pastries <orders@clarepastries.co.ke>", // Updated domain
+        to: "clare@clarepastries.co.ke", // Updated recipient
+        subject: `New Bespoke Request - ${data.fullName}`,
         html: `
           <h1>New Bespoke Request</h1>
           <p><strong>Customer:</strong> ${data.fullName}</p>

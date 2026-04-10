@@ -5,7 +5,7 @@ const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 
 if (vapidPublicKey && vapidPrivateKey && vapidPublicKey !== "BA...") {
   webpush.setVapidDetails(
-    "mailto:hello@busiapastries.co.ke",
+    "mailto:hello@clarepastries.com",
     vapidPublicKey,
     vapidPrivateKey
   );

@@ -1,11 +1,11 @@
 {
-  "name": "Busia Pastries",
-  "short_name": "BusiaPastries",
-  "description": "Artisan pastries and cakes baked fresh in Busia, Kenya.",
+  "name": "Clare Pastries",
+  "short_name": "ClarePastries",
+  "description": "Artisan pastries and cakes baked fresh with love by Clare.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#D4AF37",
+  "background_color": "#fffdfa",
+  "theme_color": "#b8860b",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

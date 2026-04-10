@@ -147,3 +147,10 @@ model PushSubscription {
   user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model ConsentLog {
+  id        String   @id @default(cuid())
+  accepted  Boolean
+  userAgent String?
+  createdAt DateTime @default(now())
+}

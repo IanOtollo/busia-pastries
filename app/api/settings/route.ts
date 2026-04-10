@@ -10,7 +10,7 @@ export async function GET() {
 
   // Default fallback settings
   const defaultSettings: SiteSettings = {
-    businessName: 'Busia Pastries',
+    businessName: 'Clare Pastries',
     phone: '+254724848228',
     location: 'Busia Town, Kenya',
     deliveryFeeKes: 100,
@@ -19,7 +19,7 @@ export async function GET() {
     announcementBanner: {
       enabled: false,
       message: '',
-      bgColor: '#2A1A0E'
+      bgColor: '#1c1612'
     }
   }
 

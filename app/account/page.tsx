@@ -42,16 +42,16 @@ export default function AccountPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-32 pb-24 bg-[var(--color-bg)]">
+    <div className="min-h-screen pt-32 pb-24 bg-cp-bg">
       <div className="container mx-auto px-4 md:px-6">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
            <div className="space-y-4">
-              <h1 className="font-display text-5xl font-bold text-[var(--color-text)]">
-                 Welcome, <span className="text-[var(--color-accent)]">{session.user?.name?.split(' ')[0]}</span>!
+              <h1 className="font-display text-5xl font-bold text-cp-text uppercase tracking-tight italic">
+                 Welcome, <span className="text-cp-accent not-italic">{session.user?.name?.split(' ')[0]}</span>!
               </h1>
-              <p className="text-[var(--color-muted)] font-medium">
+              <p className="text-cp-text-muted font-medium italic">
                  Manage your orders, profile, and pastry preferences.
               </p>
            </div>
@@ -72,8 +72,8 @@ export default function AccountPage() {
                     className={cn(
                        "w-full flex items-center justify-between p-4 rounded-xl transition-all",
                        activeTab === tab.id
-                          ? "bg-[var(--color-accent)] text-[var(--color-cta-text)] shadow-lg shadow-[var(--color-accent)]/20 font-bold"
-                          : "text-[var(--color-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)] font-medium"
+                          ? "bg-cp-accent text-cp-cta-text shadow-lg shadow-cp-accent/20 font-bold"
+                          : "text-cp-text-muted hover:bg-cp-surface hover:text-cp-text font-medium"
                     )}
                  >
                     <div className="flex items-center gap-3">
@@ -96,33 +96,33 @@ export default function AccountPage() {
                  {activeTab === "orders" && (
                     <div className="space-y-6">
                        <div className="flex items-center justify-between mb-4">
-                          <h2 className="text-2xl font-bold font-display">Recent Orders</h2>
-                          <span className="text-xs font-mono font-bold text-[var(--color-muted)] uppercase tracking-widest">
-                             Phase 1: Mock Data
+                          <h2 className="text-2xl font-bold font-display uppercase tracking-tight italic">Recent <span className="text-cp-accent not-italic">Orders.</span></h2>
+                          <span className="text-[10px] font-mono font-bold text-cp-text-muted uppercase tracking-[0.3em]">
+                             Live Status
                           </span>
                        </div>
                        
                        {/* Sample Order Mock */}
-                       <div className="bg-white border border-[var(--color-border)] rounded-2xl p-6 space-y-6 shadow-sm hover:shadow-md transition-shadow">
+                       <div className="bg-white border border-cp-border rounded-2xl p-6 space-y-6 shadow-sm hover:shadow-md transition-shadow">
                           <div className="flex flex-wrap items-center justify-between gap-4">
                              <div className="space-y-1">
-                                <p className="text-xs font-mono font-bold text-[var(--color-muted)] uppercase tracking-widest">ORDER #BP-87291</p>
-                                <p className="text-sm font-medium">Placed on Oct 24, 2023</p>
+                                <p className="text-[10px] font-mono font-bold text-cp-text-muted uppercase tracking-[0.2em]">ORDER #CP-87291</p>
+                                <p className="text-sm font-medium italic">Placed on Oct 24, 2023</p>
                              </div>
                              <div className="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-100 uppercase tracking-wider">
                                 DELIVERED
                              </div>
                           </div>
                           
-                          <div className="flex items-center gap-4 py-4 border-y border-[var(--color-border)]">
-                             <div className="w-12 h-12 rounded-lg bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-accent)]">
+                          <div className="flex items-center gap-4 py-4 border-y border-cp-border">
+                             <div className="w-12 h-12 rounded-lg bg-cp-surface flex items-center justify-center text-cp-accent">
                                 <Package className="w-6 h-6" />
                              </div>
                              <div className="flex-1">
                                 <p className="text-sm font-bold">2× Signature Chocolate Layer Cake</p>
-                                <p className="text-xs text-[var(--color-muted)]">And 3 other items</p>
+                                <p className="text-xs text-cp-text-muted italic">And 3 other items</p>
                              </div>
-                             <p className="font-mono font-bold">
+                             <p className="font-mono font-bold text-cp-text">
                                 {formatPrice(4500, currency, rate)}
                              </p>
                           </div>
@@ -136,62 +136,62 @@ export default function AccountPage() {
                  )}
 
                  {activeTab === "profile" && (
-                    <div className="bg-white border border-[var(--color-border)] rounded-3xl p-8 md:p-12 space-y-12 shadow-sm">
-                       <h2 className="text-2xl font-bold font-display">Profile Information</h2>
+                    <div className="bg-white border border-cp-border rounded-3xl p-8 md:p-12 space-y-12 shadow-sm">
+                       <h2 className="text-2xl font-bold font-display uppercase tracking-tight italic">Profile <span className="text-cp-accent not-italic">Information.</span></h2>
                        
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                           <div className="space-y-2">
-                             <div className="flex items-center gap-2 text-xs font-bold text-[var(--color-muted)] uppercase tracking-widest">
+                             <div className="flex items-center gap-2 text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.2em]">
                                 <User className="w-3.5 h-3.5" /> Full Name
                              </div>
-                             <p className="text-lg font-bold">{session.user?.name}</p>
+                             <p className="text-lg font-bold text-cp-text">{session.user?.name}</p>
                           </div>
                           <div className="space-y-2">
-                             <div className="flex items-center gap-2 text-xs font-bold text-[var(--color-muted)] uppercase tracking-widest">
+                             <div className="flex items-center gap-2 text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.2em]">
                                 <Mail className="w-3.5 h-3.5" /> Email Address
                              </div>
-                             <p className="text-lg font-bold">{session.user?.email}</p>
+                             <p className="text-lg font-bold text-cp-text">{session.user?.email}</p>
                           </div>
                           <div className="space-y-2">
-                             <div className="flex items-center gap-2 text-xs font-bold text-[var(--color-muted)] uppercase tracking-widest">
+                             <div className="flex items-center gap-2 text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.2em]">
                                 <Phone className="w-3.5 h-3.5" /> Phone Number
                              </div>
-                             <p className="text-lg font-bold">0712345678</p>
+                             <p className="text-lg font-bold text-cp-text">0712345678</p>
                           </div>
                           <div className="space-y-2">
-                             <div className="flex items-center gap-2 text-xs font-bold text-[var(--color-muted)] uppercase tracking-widest">
+                             <div className="flex items-center gap-2 text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.2em]">
                                 <Clock className="w-3.5 h-3.5" /> Account Since
                              </div>
-                             <p className="text-lg font-bold">October 2023</p>
+                             <p className="text-lg font-bold text-cp-text">October 2023</p>
                           </div>
                        </div>
 
-                       <div className="pt-8 border-t border-[var(--color-border)]">
+                       <div className="pt-8 border-t border-cp-border">
                           <Button variant="outline">Update Profile</Button>
                        </div>
                     </div>
                  )}
 
                  {activeTab === "settings" && (
-                    <div className="bg-white border border-[var(--color-border)] rounded-3xl p-8 md:p-12 space-y-8 shadow-sm">
-                       <h2 className="text-2xl font-bold font-display">Account Settings</h2>
+                    <div className="bg-white border border-cp-border rounded-3xl p-8 md:p-12 space-y-8 shadow-sm">
+                       <h2 className="text-2xl font-bold font-display uppercase tracking-tight italic">Account <span className="text-cp-accent not-italic">Settings.</span></h2>
                        <div className="space-y-6">
-                          <div className="p-4 bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] flex items-center justify-between">
+                          <div className="p-4 bg-cp-surface rounded-2xl border border-cp-border flex items-center justify-between">
                              <div className="space-y-1">
-                                <p className="font-bold text-sm">Marketing Emails</p>
-                                <p className="text-xs text-[var(--color-muted)]">Receive updates about seasonal cakes.</p>
+                                <p className="font-bold text-sm text-cp-text">Marketing Emails</p>
+                                <p className="text-xs text-cp-text-muted italic">Receive updates about seasonal cakes.</p>
                              </div>
-                             <div className="w-12 h-6 rounded-full bg-[var(--color-accent)] relative">
-                                <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-white" />
+                             <div className="w-12 h-6 rounded-full bg-cp-accent relative">
+                                <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm" />
                              </div>
                           </div>
-                          <div className="p-4 bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] flex items-center justify-between">
+                          <div className="p-4 bg-cp-surface rounded-2xl border border-cp-border flex items-center justify-between">
                              <div className="space-y-1">
-                                <p className="font-bold text-sm">Two-Factor Authentication</p>
-                                <p className="text-xs text-[var(--color-muted)]">Secure your account with SMS.</p>
+                                <p className="font-bold text-sm text-cp-text">Two-Factor Authentication</p>
+                                <p className="text-xs text-cp-text-muted italic">Secure your account with SMS.</p>
                              </div>
-                             <div className="w-12 h-6 rounded-full bg-[var(--color-border)] relative">
-                                <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white" />
+                             <div className="w-12 h-6 rounded-full bg-cp-border relative">
+                                <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm" />
                              </div>
                           </div>
                        </div>

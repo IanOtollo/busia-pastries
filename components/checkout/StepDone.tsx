@@ -56,12 +56,13 @@ export function StepDone({ orderId, trackingToken, data }: StepDoneProps) {
         </div>
 
         <div className="space-y-2">
-           <h2 className="font-display text-4xl md:text-5xl font-bold text-[var(--color-text)]">
-              The Oven is Firing Up!
-           </h2>
-           <p className="text-[var(--color-muted)] font-medium">
-              Thank you for choosing Busia Pastries, <span className="text-[var(--color-text)]">{data.name}</span>.
-           </p>
+           <h2 className="font-display text-4xl md:text-5xl font-bold text-cp-text italic">
+          Bake Confirmed!
+        </h2>
+        <p className="text-cp-text-muted leading-relaxed max-w-sm mx-auto font-body">
+          Your order has been received. Clare is already heating up the oven to 
+          prepare your fresh artisan treats.
+        </p>
         </div>
       </div>
 

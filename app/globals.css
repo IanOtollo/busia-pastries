@@ -3,67 +3,88 @@
 @tailwind utilities;
 
 :root {
-  /* Common variables */
-  --shadow-sm: 0 1px 3px rgba(26, 20, 16, 0.08);
-  --shadow-md: 0 4px 16px rgba(26, 20, 16, 0.10);
-  --shadow-lg: 0 12px 40px rgba(26, 20, 16, 0.14);
-  --shadow-card-hover: 0 8px 32px rgba(26, 20, 16, 0.16);
+  /* Common variables (Light) */
+  --shadow-sm: 0 2px 8px -1px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 12px 24px -4px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 24px 48px -8px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 32px 64px -12px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 20px 40px -4px rgba(184, 134, 11, 0.15);
 
-  /* Default theme */
-  --bp-bg: #f9f5ef;
-  --bp-surface: #f2ede4;
-  --bp-surface-2: #eae3d8;
-  --bp-border: #ddd5c8;
-  --bp-text: #1a1410;
-  --bp-text-muted: #6b6058;
-  --bp-accent: #c49a2a;
-  --bp-accent-dark: #9e7a1a;
-  --bp-cta: #2a1a0e;
-  --bp-cta-hover: #3d2818;
-  --bp-cta-text: #f9f5ef;
-  --bp-success: #3a6b35;
-  --bp-error: #8b1a1a;
+  /* Default theme (Light) */
+  --cp-bg: #fffdfa;
+  --cp-surface: #fdfaf5;
+  --cp-surface-2: #f7f0e4;
+  --cp-border: #e9dec9;
+  --cp-text: #2d241e;
+  --cp-text-muted: #7a6a5e;
+  --cp-accent: #b8860b;
+  --cp-accent-dark: #8b6508;
+  --cp-cta: #1a1512;
+  --cp-cta-hover: #2d241e;
+  --cp-cta-text: #fffdfa;
+  --cp-success: #2d5a27;
+  --cp-error: #8b1a1a;
+}
+
+[data-theme="dark"] {
+  --shadow-sm: 0 2px 8px -1px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 24px -4px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 48px -8px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 32px 64px -12px rgba(0, 0, 0, 1);
+  --shadow-card-hover: 0 20px 40px -4px rgba(0, 0, 0, 0.7);
+
+  --cp-bg: #0f0d0c;
+  --cp-surface: #1a1614;
+  --cp-surface-2: #241e1b;
+  --cp-border: #2d241e;
+  --cp-text: #f5f0eb;
+  --cp-text-muted: #a09085;
+  --cp-accent: #daa520;
+  --cp-accent-dark: #b8860b;
+  --cp-cta: #f5f0eb;
+  --cp-cta-hover: #fffdfa;
+  --cp-cta-text: #1a1512;
 }
 
 /* Seasonal Overrides */
 [data-season="valentine"] {
-  --bp-accent: #c0395a;
-  --bp-accent-dark: #9e2a46;
-  --bp-cta: #7a1a30;
-  --bp-cta-hover: #5e1424;
+  --cp-accent: #c0395a;
+  --cp-accent-dark: #9e2a46;
+  --cp-cta: #7a1a30;
+  --cp-cta-hover: #5e1424;
 }
 
 [data-season="easter"] {
-  --bp-accent: #4a7a35;
-  --bp-accent-dark: #3a612a;
-  --bp-cta: #1e3d10;
-  --bp-cta-hover: #152d0a;
+  --cp-accent: #4a7a35;
+  --cp-accent-dark: #3a612a;
+  --cp-cta: #1e3d10;
+  --cp-cta-hover: #152d0a;
 }
 
 [data-season="halloween"] {
-  --bp-accent: #c45e0a;
-  --bp-accent-dark: #9e4a08;
-  --bp-cta: #5a2000;
-  --bp-cta-hover: #451800;
+  --cp-accent: #c45e0a;
+  --cp-accent-dark: #9e4a08;
+  --cp-cta: #5a2000;
+  --cp-cta-hover: #451800;
 }
 
 [data-season="christmas"] {
-  --bp-accent: #9b1c1c;
-  --bp-accent-dark: #7a1616;
-  --bp-cta: #14401a;
-  --bp-cta-hover: #0e2e12;
+  --cp-accent: #9b1c1c;
+  --cp-accent-dark: #7a1616;
+  --cp-cta: #14401a;
+  --cp-cta-hover: #0e2e12;
 }
 
 [data-season="newyear"] {
-  --bp-accent: #3a3a8a;
-  --bp-accent-dark: #2a2a6b;
-  --bp-cta: #12124a;
-  --bp-cta-hover: #0a0a36;
+  --cp-accent: #3a3a8a;
+  --cp-accent-dark: #2a2a6b;
+  --cp-cta: #12124a;
+  --cp-cta-hover: #0a0a36;
 }
 
 @layer base {
   body {
-    @apply bg-bp-bg text-bp-text font-body antialiased;
+    @apply bg-cp-bg text-cp-text font-body antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -96,7 +117,7 @@
     z-index: 5;
     pointer-events: none;
     opacity: 0.06;
-    background-image: radial-gradient(circle at 10px 10px, var(--bp-accent) 2px, transparent 0);
+    background-image: radial-gradient(circle at 10px 10px, var(--cp-accent) 2px, transparent 0);
     background-size: 24px 24px;
     -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
     mask-image: radial-gradient(circle at center, black, transparent 80%);
@@ -104,16 +125,16 @@
 
   /* Product Card */
   .product-card {
-    @apply bg-bp-surface border border-bp-border rounded-xl shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-card-hover;
+    @apply bg-cp-surface border border-cp-border rounded-xl shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-card-hover;
   }
 
   /* Buttons */
   .btn-primary {
-    @apply bg-bp-cta text-bp-cta-text px-10 py-4 rounded-md font-medium text-lg tracking-wide transition-all duration-300 hover:bg-bp-cta-hover hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    @apply bg-cp-cta text-cp-cta-text px-10 py-4 rounded-md font-medium text-lg tracking-wide transition-all duration-300 hover:bg-cp-cta-hover hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed select-none;
   }
 
   .btn-secondary {
-    @apply text-bp-accent font-bold hover:underline underline-offset-4 flex items-center gap-2 transition-colors;
+    @apply text-cp-accent font-bold hover:underline underline-offset-4 flex items-center gap-2 transition-colors;
   }
 }
 

@@ -9,7 +9,7 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 
 export default defineConfig({
   name: 'clarepastries',
-  title: 'Busia Pastries Studio',
+  title: 'Clare Pastries Studio',
 
   projectId,
   dataset,

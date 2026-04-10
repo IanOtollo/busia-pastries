@@ -1,65 +1,123 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { MapPin, Phone, Instagram, Facebook } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { useCurrency } from "@/store/useCurrency";
+import { cn } from "@/lib/utils/cn";
 
 export function Footer({ settings }: { settings: { phone: string; location: string; businessName: string } }) {
+  const { currency, setCurrency } = useCurrency();
+
   return (
-    <footer className="bg-bp-surface border-t border-bp-border pt-20 pb-12">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
-          {/* Left: Branding */}
+    <footer className="bg-cp-surface border-t border-cp-border pt-20 pb-12 overflow-hidden relative">
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          {/* Column 1: Branding */}
           <div className="space-y-6">
-            <Logo className="w-8 h-8" />
-            <p className="text-bp-text-muted text-sm leading-relaxed max-w-xs">
-              Every Bite, a Celebration. <br />
-              {settings.location}
+            <Link href="/" className="inline-block group">
+              <Logo className="w-12 h-12 group-hover:rotate-12 transition-transform duration-500" />
+            </Link>
+            <p className="text-cp-text-muted text-sm leading-relaxed max-w-xs italic">
+              "Hand-tailoring the finest bakes with love and tradition, right here in the heart of Busia."
             </p>
+            <div className="flex items-center gap-4">
+              <a href="#" className="p-2 bg-cp-surface-2 rounded-full text-cp-text hover:text-cp-accent transition-colors">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="#" className="p-2 bg-cp-surface-2 rounded-full text-cp-text hover:text-cp-accent transition-colors">
+                <Facebook className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
-          {/* Center: Quick Links */}
+          {/* Column 2: Navigation */}
           <div className="space-y-6">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text">Navigation</h4>
-            <nav className="flex flex-col gap-4 text-sm font-medium">
-              <Link href="/menu" className="hover:text-bp-accent transition-colors">The Menu</Link>
-              <Link href="/about" className="hover:text-bp-accent transition-colors">Our Story</Link>
-              <Link href="/contact" className="hover:text-bp-accent transition-colors">Reach Us</Link>
-              <Link href="/orders/track" className="hover:text-bp-accent transition-colors">Track Order</Link>
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Cravings</h4>
+            <nav className="flex flex-col gap-3 text-sm font-semibold">
+              <Link href="/menu" className="text-cp-text hover:text-cp-accent transition-colors">The Menu</Link>
+              <Link href="/menu?cat=cakes" className="text-cp-text hover:text-cp-accent transition-colors">Celebration Cakes</Link>
+              <Link href="/menu?cat=bread" className="text-cp-text hover:text-cp-accent transition-colors">Fresh Breads</Link>
+              <Link href="/orders/track" className="text-cp-text hover:text-cp-accent transition-colors">Track Your Order</Link>
             </nav>
           </div>
 
-          {/* Right: Reach Us & Payment */}
+          {/* Column 3: The Bakery */}
+          <div className="space-y-6">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">The Bakery</h4>
+            <nav className="flex flex-col gap-3 text-sm font-semibold">
+              <Link href="/about" className="text-cp-text hover:text-cp-accent transition-colors">Our Story</Link>
+              <Link href="/contact" className="text-cp-text hover:text-cp-accent transition-colors">Contact Clare</Link>
+              <Link href="/terms" className="text-cp-text hover:text-cp-accent transition-colors">Terms of Service</Link>
+              <Link href="/privacy-policy" className="text-cp-text hover:text-cp-accent transition-colors">Privacy Policy</Link>
+            </nav>
+          </div>
+
+          {/* Column 4: Location & Payment */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text">Reach Us</h4>
-              <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="block text-lg font-bold hover:text-bp-accent transition-colors">
-                {settings.phone}
-              </a>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-tighter text-bp-text-muted">
-                {settings.location}
-              </p>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Find Us</h4>
+              <div className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-cp-accent mt-0.5" />
+                <p className="text-sm font-semibold text-cp-text leading-tight">
+                  {settings.location}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-cp-accent" />
+                <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="text-sm font-bold hover:text-cp-accent transition-colors">
+                  {settings.phone}
+                </a>
+              </div>
             </div>
 
-            <div className="space-y-3">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted">Accepted Secured Payments</span>
-              <div className="flex items-center gap-3">
-                 {/* M-Pesa Logo Placeholder SVG */}
-                 <div className="w-16 h-8 bg-bp-surface-2 rounded-md flex items-center justify-center border border-bp-border px-2">
-                    <span className="text-[12px] font-black text-[#3A6B35]">M-PESA</span>
-                 </div>
-                 <span className="text-[10px] items-center text-bp-text font-bold">Lipa na M-Pesa</span>
+            <div className="space-y-4 pt-4 border-t border-cp-border/30">
+              <span className="block text-[10px] font-bold uppercase tracking-widest text-cp-text-muted">Display Currency</span>
+              <div className="flex bg-cp-surface-2/50 rounded-xl p-1 w-fit border border-cp-border">
+                {["KES", "UGX"].map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCurrency(c as "KES" | "UGX")}
+                    className={cn(
+                      "px-6 py-2 rounded-lg text-[10px] font-bold tracking-widest transition-all",
+                      currency === c ? "bg-cp-cta text-cp-cta-text shadow-sm" : "text-cp-text-muted hover:text-cp-text"
+                    )}
+                  >
+                    {c}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-20 pt-8 border-t border-bp-border/50 flex flex-col md:flex-row justify-between gap-6">
-          <div className="flex gap-8 text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted">
-             <Link href="/privacy-policy" className="hover:text-bp-text transition-colors">Privacy Policy</Link>
-             <Link href="/terms" className="hover:text-bp-text transition-colors">Terms & Conditions</Link>
+        <div className="mt-20 pt-8 border-t border-cp-border/30 grid grid-cols-1 md:grid-cols-3 items-center gap-8 text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-2">
+            <div className="w-12 h-7 bg-[#3A6B35] rounded-md flex items-center justify-center border border-[#2d5a27] px-1 shadow-sm">
+              <span className="text-[9px] font-black text-white italic">M-PESA</span>
+            </div>
+            <span className="text-[10px] font-bold text-cp-text-muted uppercase tracking-wider">Lipa na M-Pesa</span>
           </div>
-          <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted">
-             © 2026 Busia Pastries. ALL RIGHTS RESERVED.
-          </p>
+          
+          <div className="flex justify-center">
+            <p className="text-[9px] font-medium text-cp-text-muted/60 uppercase tracking-widest flex items-center gap-1.5">
+              Handcrafted by 
+              <a href="https://ianotollo.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-cp-accent opacity-90 hover:opacity-100 transition-opacity">
+                IanOtollo
+              </a>
+              <span>at</span>
+              <a href="https://iomtechs.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-cp-accent opacity-90 hover:opacity-100 transition-opacity">
+                IOM Techs
+              </a>
+            </p>
+          </div>
+
+          <div className="flex justify-center md:justify-end">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-cp-text-muted">
+              © 2026 Clare Pastries. ALL RIGHTS RESERVED.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -6,7 +6,7 @@ import { Metadata } from "next";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   return {
-    title: `Track Order #${id.slice(-6).toUpperCase()} | Busia Pastries`,
+    title: `Track Order #${id.slice(-6).toUpperCase()} | Clare Pastries`,
   };
 }
 
@@ -22,10 +22,10 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
 
   if (!order) {
     return (
-      <div className="min-h-screen pt-40 pb-20 text-center">
+      <div className="min-h-screen pt-40 pb-20 text-center bg-cp-bg">
          <div className="container mx-auto px-4">
-            <h1 className="font-display text-4xl font-bold">Order Not Found</h1>
-            <p className="mt-4 text-bp-text-muted">We couldn&apos;t find the baking journey for this order ID.</p>
+            <h1 className="font-display text-4xl font-bold text-cp-text">Order Not Found</h1>
+            <p className="mt-4 text-cp-text-muted">We couldn&apos;t find the baking journey for this order ID.</p>
          </div>
       </div>
     );

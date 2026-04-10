@@ -11,20 +11,20 @@ export function CurrencyToggle() {
   }, []);
 
   if (!mounted) return (
-    <div className="inline-flex items-center rounded-full bg-[var(--color-surface)] p-1 border border-[var(--color-border)] shadow-sm opacity-50">
-      <div className="px-3 py-1 text-xs font-mono font-medium">...</div>
+    <div className="inline-flex items-center rounded-full bg-cp-surface p-1 border border-cp-border shadow-sm opacity-50">
+      <div className="px-3 py-1 text-[10px] font-mono font-bold">...</div>
     </div>
   );
 
   return (
-    <div className="inline-flex items-center rounded-full bg-[var(--color-surface)] p-1 border border-[var(--color-border)] shadow-sm">
+    <div className="inline-flex items-center rounded-full bg-cp-surface p-1 border border-cp-border shadow-inner">
       <button
         onClick={() => setCurrency("KES")}
         className={cn(
-          "px-3 py-1 text-xs font-mono font-medium rounded-full transition-all",
+          "px-4 py-1 text-[10px] font-mono font-bold rounded-full transition-all duration-300",
           currency === "KES"
-            ? "bg-[var(--color-cta)] text-[var(--color-cta-text)] shadow-sm"
-            : "text-[var(--color-muted)] hover:text-[var(--color-text)]"
+            ? "bg-cp-cta text-cp-cta-text shadow-lg shadow-cp-cta/20"
+            : "text-cp-text-muted hover:text-cp-text"
         )}
       >
         KES
@@ -32,10 +32,10 @@ export function CurrencyToggle() {
       <button
         onClick={() => setCurrency("UGX")}
         className={cn(
-          "px-3 py-1 text-xs font-mono font-medium rounded-full transition-all",
+          "px-4 py-1 text-[10px] font-mono font-bold rounded-full transition-all duration-300",
           currency === "UGX"
-            ? "bg-[var(--color-cta)] text-[var(--color-cta-text)] shadow-sm"
-            : "text-[var(--color-muted)] hover:text-[var(--color-text)]"
+            ? "bg-cp-cta text-cp-cta-text shadow-lg shadow-cp-cta/20"
+            : "text-cp-text-muted hover:text-cp-text"
         )}
       >
         UGX

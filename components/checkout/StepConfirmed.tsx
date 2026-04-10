@@ -27,73 +27,73 @@ export function StepConfirmed({ orderId, data, onFinish }: StepConfirmedProps) {
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", damping: 10, stiffness: 100 }}
-          className="w-32 h-32 bg-bp-success text-white rounded-full flex items-center justify-center relative z-10 shadow-lg"
+          className="w-40 h-40 bg-cp-success text-white rounded-full flex items-center justify-center relative z-10 shadow-2xl"
         >
-          <CheckCircle2 className="w-16 h-16" />
+          <CheckCircle2 className="w-20 h-20" />
         </motion.div>
         
         {/* Animated Particles (CSS/Framer) */}
-        {Array.from({ length: 12 }).map((_, i) => (
+        {Array.from({ length: 16 }).map((_, i) => (
           <motion.div
             key={i}
             initial={{ scale: 1, x: 0, y: 0, opacity: 1 }}
             animate={{ 
-              x: Math.cos((i * 30) * Math.PI / 180) * 150, 
-              y: Math.sin((i * 30) * Math.PI / 180) * 150,
+              x: Math.cos((i * (360/16)) * Math.PI / 180) * 180, 
+              y: Math.sin((i * (360/16)) * Math.PI / 180) * 180,
               opacity: 0,
               scale: 0.5
             }}
             transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
-            className="absolute top-1/2 left-1/2 w-3 h-3 bg-bp-accent rounded-full -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-1/2 left-1/2 w-3 h-3 bg-cp-accent rounded-full -translate-x-1/2 -translate-y-1/2"
           />
         ))}
       </div>
 
-      <div className="space-y-6 max-w-2xl mx-auto">
-        <h2 className="font-display text-5xl md:text-7xl font-bold text-bp-text leading-none">
+      <div className="space-y-6 max-w-2xl mx-auto px-4">
+        <h2 className="font-display text-5xl md:text-8xl font-black text-cp-text leading-[0.9] tracking-tighter uppercase italic">
           Baking Journey <br />
-          <span className="text-bp-accent">Started!</span>
+          <span className="text-cp-accent not-italic">Started!</span>
         </h2>
-        <p className="text-bp-text-muted text-lg font-body leading-relaxed">
-           Thank you, <span className="font-bold text-bp-text">{data.fullName}</span>. Your order <span className="font-mono font-bold text-bp-accent">#{orderId.slice(-6).toUpperCase()}</span> has been received. Michael is already preparing the oven.
+        <p className="text-cp-text-muted text-lg md:text-2xl font-body leading-relaxed italic">
+           Thank you, <span className="font-bold text-cp-text not-italic">{data.fullName}</span>. Your order <span className="font-mono font-bold text-cp-accent not-italic">#{orderId.slice(-6).toUpperCase()}</span> has been received. Clare is already preparing the oven with so much love.
         </p>
       </div>
 
       {/* Visual Timeline */}
-      <div className="max-w-xl mx-auto grid grid-cols-3 gap-4 pt-8">
+      <div className="max-w-xl mx-auto grid grid-cols-3 gap-4 pt-12 px-4">
          <div className="space-y-4">
-            <div className="w-12 h-12 bg-bp-success/10 text-bp-success rounded-full flex items-center justify-center mx-auto border-2 border-bp-success">
-               <Smartphone className="w-5 h-5" />
+            <div className="w-16 h-16 bg-cp-success/10 text-cp-success rounded-full flex items-center justify-center mx-auto border-2 border-cp-success shadow-lg">
+               <Smartphone className="w-6 h-6" />
             </div>
-            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-bp-success">Confirmed</span>
+            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-cp-success">Confirmed</span>
          </div>
          <div className="space-y-4">
-            <div className="w-12 h-12 bg-bp-surface text-bp-text-muted rounded-full flex items-center justify-center mx-auto border-2 border-bp-border">
-               <Package className="w-5 h-5" />
+            <div className="w-16 h-16 bg-cp-surface text-cp-text-muted rounded-full flex items-center justify-center mx-auto border-2 border-cp-border shadow-sm">
+               <Package className="w-6 h-6" />
             </div>
-            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted">Baking</span>
+            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Baking</span>
          </div>
          <div className="space-y-4">
-            <div className="w-12 h-12 bg-bp-surface text-bp-text-muted rounded-full flex items-center justify-center mx-auto border-2 border-bp-border">
-               <Truck className="w-5 h-5" />
+            <div className="w-16 h-16 bg-cp-surface text-cp-text-muted rounded-full flex items-center justify-center mx-auto border-2 border-cp-border shadow-sm">
+               <Truck className="w-6 h-6" />
             </div>
-            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-bp-text-muted">Dispatch</span>
+            <span className="block text-[10px] font-mono font-bold uppercase tracking-widest text-cp-text-muted">Dispatch</span>
          </div>
       </div>
 
-      <div className="pt-8 flex flex-col items-center gap-8">
+      <div className="pt-12 flex flex-col items-center gap-12">
         <button
           onClick={onFinish}
-          className="btn-primary flex items-center gap-3 px-16 group active:scale-[0.98]"
+          className="btn-primary flex items-center gap-4 px-20 py-6 rounded-full font-black uppercase tracking-widest active:scale-[0.98] shadow-2xl group"
         >
           Track My Order
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+          <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
         </button>
 
-        <div className="flex items-center gap-4 py-6 border-t border-bp-border w-full justify-center">
-            <Logo className="w-6 h-6" hideText />
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">
-               Baked by Michael Aderi • Busia, Kenya
+        <div className="flex flex-col items-center gap-4 py-8 border-t border-cp-border w-full max-w-lg mx-auto">
+            <Logo className="w-8 h-8" hideText />
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-cp-text-muted">
+               Hand-crafted by Clare • Busia, Kenya
             </span>
         </div>
       </div>

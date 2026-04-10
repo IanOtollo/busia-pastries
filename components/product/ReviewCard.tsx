@@ -11,19 +11,19 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="min-w-[320px] max-w-[400px] bg-white border border-[var(--color-border)] rounded-3xl p-6 space-y-6 shadow-sm hover:shadow-md transition-shadow">
+    <div className="min-w-[320px] max-w-[400px] bg-cp-surface border border-cp-border rounded-[2.5rem] p-8 space-y-6 shadow-xl shadow-cp-accent/5 hover:shadow-2xl transition-all duration-300">
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-accent)] font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-cp-surface flex items-center justify-center text-cp-accent font-black text-sm shadow-inner">
              {review.user?.name?.charAt(0) || "U"}
           </div>
           <div>
-            <h4 className="font-bold text-sm text-[var(--color-text)]">{review.user?.name || "Customer"}</h4>
-            <p className="text-[10px] text-[var(--color-muted)]">{new Date(review.createdAt).toLocaleDateString()}</p>
+            <h4 className="font-bold text-sm text-cp-text italic uppercase tracking-tight">{review.user?.name || "Customer"}.</h4>
+            <p className="text-[10px] font-medium text-cp-text-muted font-mono">{new Date(review.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
         {review.isVerified && (
-          <Badge variant="success" className="bg-emerald-50 text-emerald-700 border-emerald-100 flex items-center gap-1">
+          <Badge variant="accent" className="flex items-center gap-1">
              <CheckCircle2 className="w-2.5 h-2.5" />
              Verified
           </Badge>
@@ -32,13 +32,13 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
       <StarRating rating={review.rating} size="sm" />
 
-      <p className="text-sm text-[var(--color-text)] leading-relaxed italic">
+      <p className="text-sm text-cp-text leading-relaxed italic font-medium">
         &quot;{review.body}&quot;
       </p>
 
-      <div className="pt-4 border-t border-[var(--color-border)] flex items-center gap-2">
-         <div className="w-2 h-2 rounded-full bg-emerald-500" />
-         <span className="text-[10px] font-bold text-[var(--color-muted)] uppercase tracking-wider">Verified Purchase</span>
+      <div className="pt-6 border-t border-cp-border flex items-center gap-3">
+         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200" />
+         <span className="text-[10px] font-black text-cp-text-muted uppercase tracking-[0.2em] italic">Authentic Bite.</span>
       </div>
     </div>
   );
