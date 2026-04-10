@@ -33,8 +33,9 @@ interface Product {
   allergens?: string[];
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug: params.slug });
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug });
   
   // Handle empty array or null (Zero Mock Data Policy)
   if (!product || (Array.isArray(product) && product.length === 0)) {
@@ -50,8 +51,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const result = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug: params.slug });
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const result = await sanityFetch<Product | null>(PRODUCT_QUERY, { slug });
 
   // Handle empty array or null
   if (!result || (Array.isArray(result) && result.length === 0)) {

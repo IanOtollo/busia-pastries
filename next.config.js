@@ -7,6 +7,7 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  transpilePackages: ['sanity', 'next-sanity'],
 
   async headers() {
     return [

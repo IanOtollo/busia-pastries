@@ -3,16 +3,20 @@ import { prisma } from "@/lib/prisma/client";
 import { OrderTrackingClient } from "@/components/order/OrderTrackingClient";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
   return {
-    title: `Track Order #${params.id.slice(-6).toUpperCase()} | Busia Pastries`,
+    title: `Track Order #${id.slice(-6).toUpperCase()} | Busia Pastries`,
   };
 }
 
-export default async function OrderPage({ params }: { params: { id: string } }) {
+export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
+  // Wait for params in Next.js 15
+  const { id } = await params;
+
   // Fetch initial order state server-side
   const order = await prisma.order.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { items: true },
   });
 
