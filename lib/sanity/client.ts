@@ -1,5 +1,5 @@
 import { createClient } from 'next-sanity'
-import imageUrlBuilder from '@sanity/image-url'
+import { createImageUrlBuilder } from '@sanity/image-url'
 
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -16,7 +16,7 @@ export const previewClient = createClient({
   token: process.env.SANITY_API_TOKEN,
 })
 
-const builder = imageUrlBuilder(client)
+const builder = createImageUrlBuilder(client)
 export const urlFor = (source: Parameters<typeof builder.image>[0]) => builder.image(source)
 
 export async function sanityFetch<T>(

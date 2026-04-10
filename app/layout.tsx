@@ -41,11 +41,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
 };
 
-export default function RootLayout({
+import { getSiteSettings } from "@/lib/sanity/services";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSiteSettings();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -54,9 +58,9 @@ export default function RootLayout({
         <NextAuthProvider>
           <SeasonalProvider>
             <div className="flex flex-col min-h-screen">
-              <Navbar />
+              <Navbar settings={settings} />
               <main className="flex-grow">{children}</main>
-              <Footer />
+              <Footer settings={settings} />
             </div>
             <Toaster position="bottom-right" />
           </SeasonalProvider>

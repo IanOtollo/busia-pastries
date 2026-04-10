@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 
-export function Footer() {
+export function Footer({ settings }: { settings: { phone: string; location: string; businessName: string } }) {
   return (
     <footer className="bg-bp-surface border-t border-bp-border pt-20 pb-12">
       <div className="container mx-auto px-4 md:px-6">
@@ -12,7 +12,7 @@ export function Footer() {
             <Logo className="w-8 h-8" />
             <p className="text-bp-text-muted text-sm leading-relaxed max-w-xs">
               Every Bite, a Celebration. <br />
-              Busia Town, Kenya
+              {settings.location}
             </p>
           </div>
 
@@ -31,11 +31,11 @@ export function Footer() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-bp-text">Reach Us</h4>
-              <a href="tel:+254724848228" className="block text-lg font-bold hover:text-bp-accent transition-colors">
-                +254 724 848228
+              <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="block text-lg font-bold hover:text-bp-accent transition-colors">
+                {settings.phone}
               </a>
               <p className="text-[10px] font-mono font-bold uppercase tracking-tighter text-bp-text-muted">
-                Busia Town, Kenya (Near Kenya-Uganda Border)
+                {settings.location}
               </p>
             </div>
 

@@ -16,7 +16,7 @@ const NAV_LINKS = [
   { name: "Contact", href: "/contact" },
 ];
 
-export function Navbar() {
+export function Navbar({ settings }: { settings: { phone: string } }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -167,11 +167,11 @@ export function Navbar() {
 
               <div className="space-y-4">
                  <span className="block text-xs font-mono font-bold uppercase tracking-widest text-bp-text-muted">Contact Michael</span>
-                 <a href="tel:+254724848228" className="flex items-center gap-4 text-2xl font-bold">
+                 <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="flex items-center gap-4 text-2xl font-bold">
                     <div className="w-12 h-12 bg-bp-surface rounded-full flex items-center justify-center text-bp-accent border border-bp-border">
                        <Phone className="w-6 h-6" />
                     </div>
-                    +254 724 848228
+                    {settings.phone}
                  </a>
               </div>
             </div>
