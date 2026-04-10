@@ -1,10 +1,29 @@
 import { NextResponse } from 'next/server'
 import { sanityFetch } from '@/lib/sanity/client'
 import { SITE_SETTINGS_QUERY } from '@/lib/sanity/queries'
-import { getCachedData, setCachedData } from '@/lib/redis'
+import { getCachedData, setCachedData, redis } from '@/lib/redis'
 import { SiteSettings } from '@/lib/sanity/types'
+import { Ratelimit } from "@upstash/ratelimit"
 
-export async function GET() {
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(20, "1 m"), // 20 requests per minute per IP
+  analytics: true,
+})
+
+export async function GET(req: Request) {
+  try {
+    const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1"
+    if (process.env.UPSTASH_REDIS_REST_URL) {
+      const { success } = await ratelimit.limit(`settings_${ip}`)
+      if (!success) {
+        return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 })
+      }
+    }
+  } catch (e) {
+    // silently continue if rate limiting fails
+  }
+
   const cacheKey = 'site:settings'
   const ttl = 1800 // 30 minutes
 
