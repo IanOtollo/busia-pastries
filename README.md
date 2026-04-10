@@ -1,36 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Busia Pastries 🍰
 
-## Getting Started
+A production-grade artisan pastry e-commerce platform built with **Next.js 15**, **Sanity CMS**, **Supabase PostgreSQL**, and **M-Pesa** payments.
 
-First, run the development server:
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, React 19) |
+| CMS | Sanity Studio v5 |
+| Database | Supabase PostgreSQL (via Prisma ORM) |
+| Auth | NextAuth v5 (JWT + Credentials) |
+| Payments | M-Pesa Daraja STK Push |
+| Realtime | Supabase Realtime (order tracking) |
+| Cache | Upstash Redis (rate limiting) |
+| Email | Resend |
+| Deployment | Vercel |
+
+---
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+Copy `.env.local.example` to `.env.local` and fill in:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Database (Supabase connection strings)
+DATABASE_URL=postgresql://postgres:[password]@db.[ref].supabase.co:5432/postgres
+DIRECT_URL=postgresql://postgres:[password]@db.[ref].supabase.co:5432/postgres
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Sanity CMS
+NEXT_PUBLIC_SANITY_PROJECT_ID=
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=
 
-## Deploy on Vercel
+# Auth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# M-Pesa (Safaricom Daraja)
+MPESA_CONSUMER_KEY=
+MPESA_CONSUMER_SECRET=
+MPESA_SHORTCODE=
+MPESA_PASSKEY=
+MPESA_CALLBACK_URL=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Upstash Redis
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+---
+
+## 🚀 Database Setup (After First Deploy)
+
+### Step 1 — Apply Database Schema
+
+Run from your terminal (requires network access to Supabase):
+
+```bash
+npm run db:push
+```
+
+Or paste the contents of `prisma/migrations/001_init/migration.sql` into:
+> **Supabase Dashboard → SQL Editor → Run**
+
+### Step 2 — Enable Row Level Security
+
+Copy the contents of `supabase/rls.sql` and paste into:
+> **Supabase Dashboard → SQL Editor → Run**
+
+This enables RLS on all tables and sets up access policies.
+
+### Step 3 — Enable Realtime for Order Tracking
+
+**Option A** — Via SQL Editor:
+
+Copy the contents of `supabase/realtime.sql` and paste into:
+> **Supabase Dashboard → SQL Editor → Run**
+
+**Option B** — Via Dashboard UI:
+> **Database → Replication → Tables → Toggle ON for "Order"**
+
+### Step 4 — Verify Tables
+
+> **Supabase Dashboard → Table Editor**
+
+You should see all 7 tables:
+- `User`
+- `Order`
+- `OrderItem`
+- `CustomOrder`
+- `Review`
+- `Address`
+- `PushSubscription`
+
+---
+
+## Database Scripts
+
+```bash
+# Push schema changes without migration history (fast for initial setup)
+npm run db:push
+
+# Apply existing migrations (production-safe)
+npm run db:migrate
+
+# Open Prisma Studio (visual DB browser)
+npm run db:studio
+```
+
+---
+
+## Sanity Studio
+
+Access the CMS at `/studio` after deployment.
+
+---
+
+## Deployment
+
+Push to `main` branch — Vercel auto-deploys.
+
+Ensure all environment variables are set in the Vercel Dashboard.
