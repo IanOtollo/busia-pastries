@@ -82,8 +82,8 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-start gap-3 text-rose-800 text-xs font-medium animate-shake italic">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
+        <div className="p-4 bg-cp-error/10 border border-cp-error/20 rounded-2xl flex items-start gap-3 text-cp-error text-xs font-bold animate-shake italic glassmorphism">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <p>{error}</p>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { forwardRef, InputHTMLAttributes, useState } from "react";
 import { cn } from "@/lib/utils/cn";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -38,14 +38,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={inputType}
             className={cn(
-              "flex h-12 w-full rounded-2xl border border-cp-border bg-cp-surface px-4 py-2 text-sm font-medium text-cp-text italic transition-all",
+              "flex h-12 w-full rounded-2xl border border-cp-border bg-cp-surface px-4 py-2 text-sm font-semibold text-cp-text transition-all",
+              "shadow-sm shadow-black/5",
               icon && "pl-11",
               isPassword && "pr-12",
-              "placeholder:text-cp-text-muted/50 placeholder:italic",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cp-accent focus-visible:ring-offset-2",
-              "hover:border-cp-accent/30",
+              "placeholder:text-cp-text-muted/40 placeholder:italic placeholder:font-normal",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cp-accent/50 focus-visible:ring-offset-1",
+              "hover:border-cp-accent/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              error && "border-rose-500 focus-visible:ring-rose-500",
+              "autofill:bg-cp-surface autofill:text-cp-text",
+              error && "border-rose-500 focus-visible:ring-rose-500/50",
               className
             )}
             {...props}
@@ -54,7 +56,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 text-cp-text-muted hover:text-cp-text focus:outline-none transition-colors"
+              className="absolute right-4 p-1 rounded-lg text-cp-text-muted hover:text-cp-accent hover:bg-cp-accent/5 focus:outline-none transition-all"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
@@ -66,12 +68,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p className="text-[10px] font-bold text-rose-500 animate-fade-in uppercase tracking-widest italic">
-            {error}
-          </p>
+          <div className="flex items-center gap-1.5 px-1">
+             <AlertCircle className="w-3 h-3 text-rose-500" />
+             <p className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest italic">
+               {error}
+             </p>
+          </div>
         )}
         {!error && helperText && (
-          <p className="text-[10px] font-medium text-cp-text-muted italic">{helperText}</p>
+          <p className="text-[10px] font-medium text-cp-text-muted italic px-1">{helperText}</p>
         )}
       </div>
     );
