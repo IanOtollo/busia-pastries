@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma/client";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@/lib/redis";
 import { z } from "zod";
+import { notifyClare } from "@/lib/callmebot/notify";
+import webpush from "web-push";
 
 // Create a new ratelimiter, that allows 5 requests per 1 minute
 const ratelimit = new Ratelimit({
@@ -30,7 +32,17 @@ const orderSchema = z.object({
   subtotalKes: z.number().nonnegative(),
   deliveryFeeKes: z.number().nonnegative(),
   displayCurrency: z.string(),
+  userId: z.string().optional() // Capture optional logged in user
 });
+
+// Configure web-push if keys exist
+if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    'mailto:hello@clarepastries.com',
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+}
 
 export async function POST(req: Request) {
   try {
@@ -62,6 +74,7 @@ export async function POST(req: Request) {
     // 2. Create the Order securely
     const order = await prisma.order.create({
       data: {
+        userId: data.userId || null,
         guestName: data.fullName,
         guestPhone: data.phone,
         guestEmail: data.email || null,
@@ -90,6 +103,53 @@ export async function POST(req: Request) {
     });
 
     console.log(`[ORDER] Created successfully: ${order.id}`);
+
+    // Notify Clare via WhatsApp (non-blocking)
+    const itemsSummary = data.items
+      .map((i) => `${i.quantity}x ${i.productName}`)
+      .join(', ');
+
+    void notifyClare(
+      `🛍️ New Order #${order.id.slice(-8).toUpperCase()}!\n` +
+      `Customer: ${data.fullName}\n` +
+      `Items: ${itemsSummary}\n` +
+      `Total: KES ${data.totalKes.toFixed(2)}\n` +
+      `Fulfillment: ${data.fulfillment}\n` +
+      `Payment: ${data.paymentMethod}\n` +
+      `Track: ${process.env.NEXT_PUBLIC_APP_URL ?? ''}/orders/${order.id}?token=${order.trackingToken}`
+    );
+
+    // 3. Send Web-Push to Customer if they are registered and have a sub matching their user ID
+    if (data.userId && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+      const subs = await prisma.pushSubscription.findMany({
+        where: { userId: data.userId }
+      });
+
+      const pushPayload = JSON.stringify({
+        title: "Order Confirmed!",
+        body: "Clare received your order. She's getting started!",
+        icon: "/icon-192.png",
+        data: { url: `/orders/${order.id}?token=${order.trackingToken}` }
+      });
+
+      for (const sub of subs) {
+        try {
+          await webpush.sendNotification(
+            {
+              endpoint: sub.endpoint,
+              keys: {
+                p256dh: sub.p256dh,
+                auth: sub.auth
+              }
+            },
+            pushPayload
+          );
+        } catch (err) {
+          console.error("Failed to send push notification to subscription:", sub.id, err);
+          // Optional: if err.statusCode === 410 or 404, we could delete the stale subscription
+        }
+      }
+    }
 
     return NextResponse.json({ success: true, data: order });
 

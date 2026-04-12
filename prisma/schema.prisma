@@ -154,3 +154,76 @@ model ConsentLog {
   userAgent String?
   createdAt DateTime @default(now())
 }
+
+// ── Clare Admin Dashboard Models ──────────────────────────
+
+enum StaffStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+}
+
+model StaffRole {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  description String?
+  permissions String[]
+  staff       StaffAccount[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model StaffAccount {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  phone        String?
+  passwordHash String?
+  isSuperAdmin Boolean      @default(false)
+  roleId       String?
+  role         StaffRole?   @relation(fields: [roleId], references: [id])
+  status       StaffStatus  @default(INVITED)
+  inviteToken  String?      @unique
+  inviteExpiry DateTime?
+  lastLogin    DateTime?
+  createdAt    DateTime     @default(now())
+
+  @@map("staff_accounts")
+}
+
+model OrderStatusLog {
+  id        String   @id @default(cuid())
+  orderId   String
+  status    String
+  changedBy String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@map("order_status_logs")
+}
+
+model StaffInvite {
+  id        String    @id @default(cuid())
+  email     String
+  token     String    @unique
+  roleId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@map("staff_invites")
+}
+
+model PaymentLog {
+  id          String   @id @default(cuid())
+  orderId     String
+  reference   String
+  status      String
+  amount      Float?
+  mpesaRef    String?
+  phone       String?
+  rawPayload  String
+  processedAt DateTime @default(now())
+
+  @@map("payment_logs")
+}

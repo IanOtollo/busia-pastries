@@ -1,59 +1,73 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma/client";
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma/client'
+import { verifyPayment } from '@/lib/payhero/client'
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
   try {
+    const { id } = await params
     const order = await prisma.order.findUnique({
       where: { id },
       select: {
-        id: true,
-        status: true,
         paymentStatus: true,
-        updatedAt: true,
-        totalKes: true,
-        guestName: true,
-        guestPhone: true,
-        deliveryArea: true,
-        items: {
-          select: {
-            productName: true,
-            quantity: true,
-            unitPriceKes: true,
-          },
-        },
+        status: true,
+        mpesaCheckoutId: true,
+        mpesaRef: true,
       },
-    });
+    })
 
     if (!order) {
-      return NextResponse.json(
-        { success: false, error: "Order not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 })
     }
 
-
-    return NextResponse.json({
-      success: true,
-      data: {
+    // Already paid — return immediately
+    if (order.paymentStatus === 'PAID') {
+      return NextResponse.json({
+        success: true,
+        paid: true,
         status: order.status,
-        paymentStatus: order.paymentStatus,
-        updatedAt: order.updatedAt,
-        totalKes: order.totalKes,
-        guestName: order.guestName,
-        guestPhone: order.guestPhone,
-        deliveryArea: order.deliveryArea,
-        items: order.items,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching payment status:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 }
-    );
+        mpesaRef: order.mpesaRef,
+      })
+    }
+
+    // If we have a PayHero reference, poll live status
+    if (order.mpesaCheckoutId) {
+      const result = await verifyPayment(order.mpesaCheckoutId)
+
+      if (result.paid) {
+        await prisma.$transaction([
+          prisma.order.update({
+            where: { id },
+            data: {
+              paymentStatus: 'PAID',
+              status: 'CONFIRMED',
+              mpesaRef: result.mpesaRef ?? null,
+            },
+          }),
+          prisma.orderStatusLog.create({
+            data: {
+              orderId: id,
+              status: 'CONFIRMED',
+              changedBy: 'payment_status_poll',
+              note: `Payment verified via polling. M-Pesa Ref: ${result.mpesaRef ?? 'unknown'}`,
+            },
+          }),
+        ])
+
+        return NextResponse.json({
+          success: true,
+          paid: true,
+          status: 'CONFIRMED',
+          mpesaRef: result.mpesaRef,
+        })
+      }
+    }
+
+    return NextResponse.json({ success: true, paid: false, status: order.status })
+  } catch (error: unknown) {
+    console.error('[payment-status] Error:', error)
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

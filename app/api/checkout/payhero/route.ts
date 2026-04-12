@@ -1,84 +1,94 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma/client";
-import axios from "axios";
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma/client'
+import { initiateSTKPush } from '@/lib/payhero/client'
+import { Ratelimit } from '@upstash/ratelimit'
+import { redis } from '@/lib/redis'
+import { z } from 'zod'
 
-/**
- * PayHero Kenya STK Push Initiation
- * Supporting NCBA Loop Paybill 714888
- */
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, '1 m'),
+  analytics: true,
+})
+
+const kenyaPhoneRegex = /^2547\d{8}$/
+const ugandaPhoneRegex = /^2567\d{8}$/
+
+const schema = z.object({
+  phone: z.string().min(1, 'Phone required'),
+  orderId: z.string().min(1, 'Order ID required'),
+})
 
 export async function POST(req: Request) {
-  try {
-    const { orderId, phone, amount } = await req.json();
-
-    if (!orderId || !phone || !amount) {
-      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+  // Rate limit
+  const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1'
+  if (process.env.UPSTASH_REDIS_REST_URL) {
+    const { success } = await ratelimit.limit(`payhero_${ip}`)
+    if (!success) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests. Please try again in a minute.' },
+        { status: 429 }
+      )
     }
-
-    const username = process.env.PAYHERO_API_ID;
-    const password = process.env.PAYHERO_API_KEY;
-    const channelId = process.env.PAYHERO_CHANNEL_ID;
-    const baseUrl = process.env.PAYHERO_API_URL || "https://app.payhero.co.ke/api/v1";
-
-    if (!username || !password || !channelId) {
-      console.error("[PayHero] Missing configuration environment variables.");
-      return NextResponse.json({ success: false, error: "Payment gateway configuration error" }, { status: 500 });
-    }
-
-    // Format phone to 254XXXXXXXXX
-    let formattedPhone = phone.replace("+", "");
-    if (formattedPhone.startsWith("0")) {
-      formattedPhone = "254" + formattedPhone.slice(1);
-    }
-
-    const payload = {
-      amount: parseFloat(amount),
-      phone_number: formattedPhone,
-      channel_id: parseInt(channelId),
-      provider: "m-pesa",
-      external_reference: orderId,
-      callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payhero/callback`,
-    };
-
-    const auth = Buffer.from(`${username}:${password}`).toString("base64");
-
-    console.log(`[PayHero] Initiating STK Push for Order: ${orderId}, Amount: ${amount}`);
-
-    const response = await axios.post(`${baseUrl}/service/stk_push`, payload, {
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.data && response.data.status === "success") {
-      const checkoutId = response.data.checkout_request_id || response.data.CheckoutRequestID;
-
-      // Update Order with PayHero Reference
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { 
-           mpesaCheckoutId: checkoutId, // Reusing existing field for compatibility
-           notes: (await prisma.order.findUnique({ where: { id: orderId } }))?.notes + `\n[PayHero ID: ${checkoutId}]`
-        },
-      });
-
-      return NextResponse.json({ 
-        success: true, 
-        checkoutId,
-        message: "STK Push initiated successfully" 
-      });
-    } else {
-      console.error("[PayHero] Service Error:", response.data);
-      return NextResponse.json({ 
-        success: false, 
-        error: response.data?.message || "Failed to initiate STK Push" 
-      }, { status: 400 });
-    }
-
-  } catch (error: any) {
-    console.error("[PayHero] API Error:", error.response?.data || error.message);
-    const errorMessage = error.response?.data?.message || error.message || "Internal Server Error";
-    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
+
+  let body: unknown
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 })
+  }
+
+  const parsed = schema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json(
+      { success: false, error: 'Missing required fields', details: parsed.error.format() },
+      { status: 400 }
+    )
+  }
+
+  const { phone, orderId } = parsed.data
+
+  // Validate phone format
+  if (!kenyaPhoneRegex.test(phone) && !ugandaPhoneRegex.test(phone)) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid phone number. Use Kenya (2547XXXXXXXX) or Uganda (2567XXXXXXXX) format.' },
+      { status: 400 }
+    )
+  }
+
+  // Fetch and verify order
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  })
+
+  if (!order) {
+    return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 })
+  }
+
+  if (order.paymentStatus === 'PAID') {
+    return NextResponse.json({ success: false, error: 'This order has already been paid.' }, { status: 409 })
+  }
+
+  // Initiate STK Push
+  const customerName = order.guestName ?? 'Customer'
+  const result = await initiateSTKPush({
+    phone,
+    amount: order.totalKes,
+    orderId: order.id,
+    customerName,
+  })
+
+  if (!result.success) {
+    return NextResponse.json({ success: false, error: result.error ?? 'Payment initiation failed' }, { status: 502 })
+  }
+
+  // Save PayHero reference
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { mpesaCheckoutId: result.reference },
+  })
+
+  return NextResponse.json({ success: true, reference: result.reference })
 }
