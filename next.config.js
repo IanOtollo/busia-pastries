@@ -57,6 +57,16 @@ const nextConfig = {
       allowedOrigins: ["localhost:3000"],
     },
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/about',
+        destination: '/galore',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

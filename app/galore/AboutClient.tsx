@@ -3,7 +3,7 @@
 import React from "react";
 import { Wheat, Heart, Users, Award, Star } from "lucide-react";
 import { motion } from "framer-motion";
-import { GalleryCarousel } from "@/components/about/GalleryCarousel";
+import { GalleryCarousel } from "@/components/galore/GalleryCarousel";
 
 interface GalleryImage {
   _id: string;
@@ -29,7 +29,7 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
            >
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cp-accent/10 text-cp-accent text-[10px] font-mono font-bold uppercase tracking-[0.2em]">
                  <Star className="w-3 h-3 fill-cp-accent" />
-                 Our Story
+                 Galore
               </div>
               <h1 className="font-display text-5xl md:text-8xl font-black text-cp-text leading-[0.85] tracking-tighter">
                  Baking Joy <br />

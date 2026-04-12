@@ -2,12 +2,12 @@ import React from "react";
 import { sanityFetch } from "@/lib/sanity/client";
 import { MenuClient } from "@/components/menu/MenuClient";
 
-const ALL_PRODUCTS_QUERY = `*[_type == "product"] | order(isFeatured desc, _createdAt desc) {
+const ALL_PRODUCTS_QUERY = `*[_type == "product"] | order(featured desc, _createdAt desc) {
   _id,
   name,
   "slug": slug.current,
   category,
-  description,
+  shortDescription,
   priceKes,
   inStock,
   "mainImage": images[0] {
@@ -26,7 +26,7 @@ interface Product {
   name: string;
   slug: string;
   category: string;
-  description: string;
+  shortDescription: string;
   priceKes: number;
   inStock: boolean;
   mainImage?: { asset: { url: string }; alt?: string };

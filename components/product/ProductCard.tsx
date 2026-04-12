@@ -14,7 +14,7 @@ interface ProductProps {
     name: string;
     slug: string;
     category: string;
-    description: string;
+    shortDescription: string;
     priceKes: number;
     inStock: boolean;
     mainImage?: { asset: { url: string }; alt?: string };
@@ -83,7 +83,7 @@ export function ProductCard({ product }: ProductProps) {
             </h3>
           </Link>
           <p className="text-cp-text-muted text-xs font-body line-clamp-2 leading-relaxed italic">
-            {product.description}
+            {product.shortDescription}
           </p>
         </div>
 

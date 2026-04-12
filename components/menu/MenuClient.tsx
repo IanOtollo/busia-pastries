@@ -12,7 +12,7 @@ interface Product {
   name: string;
   slug: string;
   category: string;
-  description: string;
+  shortDescription: string;
   priceKes: number;
   inStock: boolean;
   mainImage?: { asset: { url: string }; alt?: string };
@@ -37,7 +37,7 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
       results = results.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q)
+          p.shortDescription.toLowerCase().includes(q)
       );
     }
 

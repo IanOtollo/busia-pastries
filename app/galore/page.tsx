@@ -13,10 +13,10 @@ interface GalleryImage {
 
 export default async function AboutPage() {
   const galleryImages = await sanityFetch<GalleryImage[]>(
-    `*[_type == "galleryImage"] | order(_createdAt desc) {
+    `*[_type == "galleryImage"] | order(publishedAt desc, _createdAt desc) {
       _id,
       title,
-      imageUrl,
+      "imageUrl": coalesce(imageUrl, image.asset->url),
       caption
     }`
   );

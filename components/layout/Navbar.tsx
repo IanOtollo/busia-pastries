@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils/cn";
 
 
 const NAV_LINKS = [
-  { name: "About Clare", href: "/about" },
+  { name: "Galore", href: "/galore" },
   { name: "Contact", href: "/contact" },
 ];
 

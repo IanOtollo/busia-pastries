@@ -28,6 +28,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'imageUrl',
+      title: 'Image URL (Managed)',
+      type: 'string',
+      description: 'Public URL from Supabase storage',
+      readOnly: true,
+      hidden: ({ document }) => !document?.imageUrl,
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',

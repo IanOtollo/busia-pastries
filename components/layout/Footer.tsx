@@ -47,7 +47,7 @@ export function Footer({ settings }: { settings: { phone: string; location: stri
           <div className="space-y-6">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">The Bakery</h4>
             <nav className="flex flex-col gap-3 text-sm font-semibold">
-              <Link href="/about" className="text-cp-text hover:text-cp-accent transition-colors">Our Story</Link>
+              <Link href="/galore" className="text-cp-text hover:text-cp-accent transition-colors">Galore</Link>
               <Link href="/contact" className="text-cp-text hover:text-cp-accent transition-colors">Contact Clare</Link>
               <Link href="/terms" className="text-cp-text hover:text-cp-accent transition-colors">Terms of Service</Link>
               <Link href="/privacy-policy" className="text-cp-text hover:text-cp-accent transition-colors">Privacy Policy</Link>

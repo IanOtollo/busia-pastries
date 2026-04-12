@@ -120,8 +120,8 @@ export function Hero() {
                 Reserve Yours
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
               </Link>
-              <Link href="/about" className="text-white font-bold text-lg hover:text-cp-accent transition-colors flex items-center gap-2 group underline-offset-8 hover:underline">
-                Our Story
+              <Link href="/galore" className="text-white font-bold text-lg hover:text-cp-accent transition-colors flex items-center gap-2 group underline-offset-8 hover:underline">
+                Galore
                 <motion.span animate={{ x: [0, 3, 0] }} transition={{ repeat: Infinity, duration: 2 }}>→</motion.span>
               </Link>
             </motion.div>

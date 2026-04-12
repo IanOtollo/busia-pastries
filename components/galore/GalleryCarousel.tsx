@@ -169,7 +169,7 @@ export function GalleryCarousel({ images }: GalleryCarouselProps) {
             <CroissantIcon className="w-6 h-6" />
          </div>
          <div className="pr-4">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-white">Gallery</p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-white">Galore</p>
             <p className="text-[8px] font-bold text-white/60 uppercase tracking-tighter italic leading-none">Artisanal Choice</p>
          </div>
       </div>
