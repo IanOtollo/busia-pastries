@@ -22,20 +22,14 @@ interface MenuClientProps {
   initialProducts: Product[];
 }
 
-const CATEGORIES = ["All", "Artisan Breads", "Cakes & Celebrations", "Sweet Pastries"];
 
 export function MenuClient({ initialProducts }: MenuClientProps) {
-  const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("featured");
 
   const filteredProducts = useMemo(() => {
     let results = [...initialProducts];
 
-    // Filter by Category
-    if (activeCategory !== "All") {
-      results = results.filter((p) => p.category.toLowerCase().includes(activeCategory.toLowerCase().slice(0, 5)));
-    }
 
     // Filter by Search
     if (searchQuery) {
@@ -64,22 +58,9 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
     <div className="space-y-12">
       {/* Search & Filters Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 py-6 border-y border-cp-border/50 sticky top-20 z-30 bg-cp-bg/80 backdrop-blur-md">
-        {/* Categories */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={cn(
-                "px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
-                activeCategory === cat
-                  ? "bg-cp-cta border-cp-cta text-cp-cta-text shadow-sm"
-                  : "bg-cp-surface border-cp-border text-cp-text-muted hover:text-cp-text"
-              )}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">Collective Menu</span>
+          <h2 className="text-2xl font-black text-cp-text uppercase italic">The Full <span className="text-cp-accent not-italic">Selection.</span></h2>
         </div>
 
         {/* Search & Sort */}
@@ -154,14 +135,6 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
                    "Clare is handpicking this season's finest bakes with so much love. She'll be back soon with something truly special — check back shortly."
                 </p>
               </div>
-              {activeCategory !== "All" && (
-                <button 
-                  onClick={() => setActiveCategory("All")}
-                  className="text-cp-accent font-bold text-xs uppercase tracking-widest hover:underline"
-                >
-                  View All collections
-                </button>
-              )}
             </motion.div>
           )}
         </AnimatePresence>

@@ -11,11 +11,6 @@ import { useCart } from "@/store/useCart";
 import { useCurrency } from "@/store/useCurrency";
 import { cn } from "@/lib/utils/cn";
 
-const SHOP_LINKS = [
-  { name: "Artisan Breads", href: "/menu?cat=bread" },
-  { name: "Cakes & Celebrations", href: "/menu?cat=cakes" },
-  { name: "Sweet Pastries", href: "/menu?cat=pastries" },
-];
 
 const NAV_LINKS = [
   { name: "About Clare", href: "/about" },
@@ -25,7 +20,6 @@ const NAV_LINKS = [
 export function Navbar({ settings }: { settings: { phone: string } }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
   const pathname = usePathname();
   const itemCount = useCart((state) => state.getItemCount());
   const { currency, setCurrency } = useCurrency();
@@ -66,37 +60,15 @@ export function Navbar({ settings }: { settings: { phone: string } }) {
 
             {/* Center: Desktop Links */}
             <div className="hidden md:flex items-center gap-8 lg:gap-12">
-              <div 
-                className="relative group"
-                onMouseEnter={() => setIsShopDropdownOpen(true)}
-                onMouseLeave={() => setIsShopDropdownOpen(false)}
+              <Link
+                href="/menu"
+                className={cn(
+                  "text-sm font-semibold tracking-wide transition-colors hover:text-cp-accent",
+                  pathname === "/menu" ? "text-cp-accent" : "text-cp-text"
+                )}
               >
-                <button className="flex items-center gap-1 text-sm font-semibold tracking-wide text-cp-text hover:text-cp-accent transition-colors">
-                  Shop <ChevronDown className={cn("w-4 h-4 transition-transform", isShopDropdownOpen && "rotate-180")} />
-                </button>
-                <AnimatePresence>
-                  {isShopDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 pt-4"
-                    >
-                      <div className="bg-cp-surface border border-cp-border shadow-lg rounded-xl overflow-hidden min-w-[200px] py-2">
-                        {SHOP_LINKS.map((link) => (
-                          <Link
-                            key={link.name}
-                            href={link.href}
-                            className="block px-4 py-2.5 text-sm font-medium hover:bg-cp-surface-2 hover:text-cp-accent transition-all"
-                          >
-                            {link.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                Menu
+              </Link>
 
               {NAV_LINKS.map((link) => (
                 <Link
@@ -166,17 +138,14 @@ export function Navbar({ settings }: { settings: { phone: string } }) {
           >
             <div className="flex flex-col gap-6">
               <div className="space-y-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Shop Collections</span>
-                {SHOP_LINKS.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="flex items-center justify-between py-2 border-b border-cp-border/30"
-                  >
-                    <span className="font-display text-2xl font-semibold">{link.name}</span>
-                    <ChevronRight className="w-5 h-5 text-cp-accent" />
-                  </Link>
-                ))}
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Our Pastries</span>
+                <Link
+                  href="/menu"
+                  className="flex items-center justify-between py-2 border-b border-cp-border/30"
+                >
+                  <span className="font-display text-4xl font-semibold">Menu</span>
+                  <ChevronRight className="w-8 h-8 text-cp-accent" />
+                </Link>
               </div>
 
               <div className="space-y-4 mt-4">
