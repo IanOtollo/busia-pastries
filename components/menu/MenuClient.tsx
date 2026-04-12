@@ -52,7 +52,7 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
     results.sort((a, b) => (a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1));
 
     return results;
-  }, [initialProducts, activeCategory, searchQuery, sortBy]);
+  }, [initialProducts, searchQuery, sortBy]);
 
   return (
     <div className="space-y-12">
