@@ -6,12 +6,17 @@ import { z } from "zod";
 import { notifyClare } from "@/lib/callmebot/notify";
 import webpush from "web-push";
 
-// Create a new ratelimiter, that allows 5 requests per 1 minute
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, "1 m"),
-  analytics: true,
-});
+// Lazily created only when Redis is fully configured
+function getRatelimiter() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, "1 m"),
+    analytics: true,
+  });
+}
 
 const orderSchema = z.object({
   items: z.array(z.object({
@@ -46,14 +51,17 @@ if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 
 export async function POST(req: Request) {
   try {
-    // 0. Rate Limiting Check
+    // 0. Rate Limiting Check (only when Redis is fully configured)
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-    
-    // Only rate limit if redis is fully configured (i.e., in production/proper dev env)
-    if (process.env.UPSTASH_REDIS_REST_URL) {
-      const { success } = await ratelimit.limit(`order_${ip}`);
-      if (!success) {
-        return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
+    const ratelimiter = getRatelimiter();
+    if (ratelimiter) {
+      try {
+        const { success } = await ratelimiter.limit(`order_${ip}`);
+        if (!success) {
+          return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
+        }
+      } catch (rateErr) {
+        console.warn("[Rate limit] Redis error, skipping rate check:", rateErr);
       }
     }
 
