@@ -5,19 +5,30 @@ import { getCachedData, setCachedData, redis } from '@/lib/redis'
 import { SiteSettings } from '@/lib/sanity/types'
 import { Ratelimit } from "@upstash/ratelimit"
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(20, "1 m"), // 20 requests per minute per IP
-  analytics: true,
-})
+// Lazily created only when Redis is fully configured
+function getRatelimiter() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(10, '10 s'),
+    analytics: true,
+  });
+}
 
 export async function GET(req: Request) {
   try {
     const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1"
-    if (process.env.UPSTASH_REDIS_REST_URL) {
-      const { success } = await ratelimit.limit(`settings_${ip}`)
-      if (!success) {
-        return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 })
+    const ratelimiter = getRatelimiter();
+    if (ratelimiter) {
+      try {
+        const { success } = await ratelimiter.limit(`settings_${ip}`);
+        if (!success) {
+          return NextResponse.json({ error: "Too many requests" }, { status: 429 })
+        }
+      } catch (rateErr) {
+        console.warn('[Rate limit] Redis error, skipping rate check:', rateErr);
       }
     }
   } catch (e) {
