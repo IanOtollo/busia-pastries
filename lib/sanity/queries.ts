@@ -7,7 +7,7 @@ export const FEATURED_PRODUCTS_QUERY = `
     category,
     shortDescription,
     priceKes,
-    available,
+    "inStock": available,
     "images": images[]{
       alt,
       "url": asset->url
@@ -23,7 +23,7 @@ export const ALL_PRODUCTS_QUERY = `
     category,
     shortDescription,
     priceKes,
-    available,
+    "inStock": available,
     "images": images[]{
       alt,
       "url": asset->url
@@ -37,10 +37,10 @@ export const PRODUCT_BY_SLUG_QUERY = `
     name,
     "slug": slug.current,
     category,
-    description,
     shortDescription,
+    description,
     priceKes,
-    available,
+    "inStock": available,
     featured,
     ingredients,
     allergens,

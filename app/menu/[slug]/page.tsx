@@ -8,10 +8,11 @@ const PRODUCT_QUERY = `*[_type == "product" && slug.current == $slug][0] {
   name,
   "slug": slug.current,
   category,
+  shortDescription,
   description,
   richDescription,
   priceKes,
-  inStock,
+  "inStock": available,
   ingredients,
   allergens,
   "images": images[] {
@@ -25,7 +26,8 @@ interface Product {
   name: string;
   slug: string;
   category: string;
-  description: string;
+  shortDescription: string;
+  description: any; // Portable Text block array
   priceKes: number;
   inStock: boolean;
   images: Array<{ asset: { url: string }, alt?: string }>;
@@ -47,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: `${p.name} | Clare Pastries`,
-    description: p.description,
+    description: p.shortDescription,
   };
 }
 

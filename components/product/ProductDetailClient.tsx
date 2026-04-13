@@ -9,13 +9,16 @@ import { useCart } from "@/store/useCart";
 import { useCurrency } from "@/store/useCurrency";
 import { cn } from "@/lib/utils/cn";
 import toast from "react-hot-toast";
+import { PortableText } from "@portabletext/react";
 
 interface Product {
   _id: string;
   name: string;
   slug: string;
   category: string;
-  description: string;
+  shortDescription: string;
+  description: any; // Portable Text blocks
+  richDescription?: any;
   priceKes: number;
   inStock: boolean;
   images: Array<{
@@ -149,9 +152,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </div>
             </div>
 
-            <p className="text-cp-text-muted text-lg md:text-2xl leading-relaxed font-body border-l-2 border-cp-accent/20 pl-6 italic">
-              {product.description}
-            </p>
+            <div className="text-cp-text-muted text-lg md:text-2xl leading-relaxed font-body border-l-2 border-cp-accent/20 pl-6 italic prose prose-cp max-w-none">
+              <PortableText value={product.description} />
+            </div>
 
             {/* Add to Cart / Quantity */}
             <div className="space-y-6 pt-4">

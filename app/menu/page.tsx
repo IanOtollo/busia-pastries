@@ -9,7 +9,7 @@ const ALL_PRODUCTS_QUERY = `*[_type == "product"] | order(featured desc, _create
   category,
   shortDescription,
   priceKes,
-  inStock,
+  "inStock": available,
   "mainImage": images[0] {
     asset-> { url },
     alt

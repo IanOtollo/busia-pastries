@@ -9,7 +9,7 @@ interface Product {
   name: string;
   slug: { current: string };
   category: string;
-  description: string;
+  shortDescription: string;
   priceKes: number;
   inStock: boolean;
   mainImage?: { asset: { url: string }; alt?: string };
@@ -27,9 +27,9 @@ export async function FeaturedProducts() {
       name,
       slug,
       category,
-      description,
+      shortDescription,
       priceKes,
-      inStock,
+      "inStock": available,
       "mainImage": images[0] {
         asset-> { url },
         alt

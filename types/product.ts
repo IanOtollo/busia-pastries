@@ -20,7 +20,7 @@ export interface SanityProduct {
   name: string;
   slug: string;
   category: "Cakes" | "Pastries" | "Bread" | "Occasion" | string;
-  description: string;
+  shortDescription: string;
   richDescription?: unknown; // Sanity portable text
   priceKes: number;
   isFeatured: boolean;
