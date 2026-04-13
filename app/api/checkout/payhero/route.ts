@@ -5,11 +5,17 @@ import { Ratelimit } from '@upstash/ratelimit'
 import { redis } from '@/lib/redis'
 import { z } from 'zod'
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(5, '1 m'),
-  analytics: true,
-})
+// Lazily created only when Redis is fully configured
+function getRatelimiter() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, '1 m'),
+    analytics: true,
+  });
+}
 
 const kenyaPhoneRegex = /^2547\d{8}$/
 const ugandaPhoneRegex = /^2567\d{8}$/
@@ -22,13 +28,18 @@ const schema = z.object({
 export async function POST(req: Request) {
   // Rate limit
   const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1'
-  if (process.env.UPSTASH_REDIS_REST_URL) {
-    const { success } = await ratelimit.limit(`payhero_${ip}`)
-    if (!success) {
-      return NextResponse.json(
-        { success: false, error: 'Too many requests. Please try again in a minute.' },
-        { status: 429 }
-      )
+  const ratelimiter = getRatelimiter();
+  if (ratelimiter) {
+    try {
+      const { success } = await ratelimiter.limit(`payhero_${ip}`);
+      if (!success) {
+        return NextResponse.json(
+          { success: false, error: 'Too many requests. Please try again in a minute.' },
+          { status: 429 }
+        );
+      }
+    } catch (rateErr) {
+      console.warn('[Rate limit] Redis error, skipping rate check:', rateErr);
     }
   }
 
