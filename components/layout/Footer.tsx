@@ -34,22 +34,22 @@ export function Footer({ settings }: { settings: { phone: string; location: stri
 
           {/* Column 2: Navigation */}
           <div className="space-y-6">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Cravings</h4>
+            <h4 className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Cravings</h4>
             <nav className="flex flex-col gap-3 text-sm font-semibold">
-              <Link href="/menu" className="text-cp-text hover:text-cp-accent transition-colors">The Menu</Link>
-              <Link href="/menu?cat=cakes" className="text-cp-text hover:text-cp-accent transition-colors">Celebration Cakes</Link>
-              <Link href="/menu?cat=bread" className="text-cp-text hover:text-cp-accent transition-colors">Fresh Breads</Link>
-              <Link href="/orders/track" className="text-cp-text hover:text-cp-accent transition-colors">Track Your Order</Link>
+              <Link href="/menu" className="text-cp-text hover:text-cp-accent transition-colors">Menu</Link>
+              <Link href="/menu?cat=Seasonal" className="text-cp-text hover:text-cp-accent transition-colors">Seasonal</Link>
+              <Link href="/menu#custom-order" className="text-cp-text hover:text-cp-accent transition-colors">Custom Orders</Link>
             </nav>
           </div>
 
           {/* Column 3: The Bakery */}
           <div className="space-y-6">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">The Bakery</h4>
+            <h4 className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">The Bakery</h4>
             <nav className="flex flex-col gap-3 text-sm font-semibold">
-              <Link href="/galore" className="text-cp-text hover:text-cp-accent transition-colors">Galore</Link>
-              <Link href="/contact" className="text-cp-text hover:text-cp-accent transition-colors">Contact Clare</Link>
-              <Link href="/terms" className="text-cp-text hover:text-cp-accent transition-colors">Terms of Service</Link>
+              <Link href="/galore" className="text-cp-text hover:text-cp-accent transition-colors">About</Link>
+              <Link href="/terms" className="text-cp-text hover:text-cp-accent transition-colors">FAQs</Link>
+              <Link href="/galore" className="text-cp-text hover:text-cp-accent transition-colors">Gallery</Link>
+              <Link href="/contact" className="text-cp-text hover:text-cp-accent transition-colors">Contact</Link>
               <Link href="/privacy-policy" className="text-cp-text hover:text-cp-accent transition-colors">Privacy Policy</Link>
             </nav>
           </div>
@@ -57,17 +57,18 @@ export function Footer({ settings }: { settings: { phone: string; location: stri
           {/* Column 4: Location & Payment */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Find Us</h4>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Find Us</h4>
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-cp-accent mt-0.5" />
                 <p className="text-sm font-semibold text-cp-text leading-tight">
-                  {settings.location}
+                  {settings.location} <br />
+                  <span className="text-cp-text-muted text-xs font-normal">Open 10 AM to 6 PM</span>
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-cp-accent" />
-                <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="text-sm font-bold hover:text-cp-accent transition-colors">
-                  {settings.phone}
+                <a href={`https://wa.me/${settings.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-sm font-bold hover:text-cp-accent transition-colors">
+                  WhatsApp Us
                 </a>
               </div>
             </div>
@@ -114,7 +115,7 @@ export function Footer({ settings }: { settings: { phone: string; location: stri
           </div>
 
           <div className="flex justify-center md:justify-end">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-cp-text-muted">
+            <p className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">
               © 2026 Clare Pastries. ALL RIGHTS RESERVED.
             </p>
           </div>

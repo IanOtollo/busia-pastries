@@ -41,7 +41,7 @@ export async function FeaturedProducts() {
 
   if (products.length === 0) {
     return (
-      <section className="py-32 bg-cp-bg">
+      <section className="py-16 md:py-32 bg-cp-bg">
         <div className="container mx-auto px-4 text-center space-y-8">
           <div className="w-24 h-24 bg-cp-surface rounded-full flex items-center justify-center mx-auto border-2 border-dashed border-cp-border">
             <ChefHat className="w-12 h-12 text-cp-text-muted opacity-50" />
@@ -60,7 +60,7 @@ export async function FeaturedProducts() {
   }
 
   return (
-    <section className="py-32 bg-cp-bg border-y border-cp-border relative overflow-hidden">
+    <section className="py-16 md:py-32 bg-cp-bg border-y border-cp-border relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
           <div className="space-y-8">

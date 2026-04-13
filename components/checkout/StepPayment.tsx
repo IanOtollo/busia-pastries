@@ -35,7 +35,7 @@ export function StepPayment({ data, orderId, amountKes, onNext }: StepPaymentPro
           Payment <br />
           <span className="text-cp-accent not-italic">Gateway.</span>
         </h2>
-        <p className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">Choose your preferred path</p>
+        <p className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Choose your preferred path</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

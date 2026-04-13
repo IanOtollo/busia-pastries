@@ -1,16 +1,9 @@
 "use client";
 import React from "react";
-import { Mail, Phone, MapPin, Send, MessageSquare, Star } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Phone, MapPin, MessageSquare, Star, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ContactPage() {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Logic for form submission
-  };
-
   return (
     <div className="min-h-screen pt-40 pb-24 bg-cp-bg">
       <div className="container mx-auto px-4 md:px-6">
@@ -31,7 +24,7 @@ export default function ContactPage() {
               </h1>
               <p className="text-cp-text-muted text-lg leading-relaxed max-w-md font-body">
                 Have a special request? Or just want to say hi? We&apos;d love to hear from you. 
-                Our team usually responds within 2 hours.
+                Clare will get back to you as soon as possible.
               </p>
             </div>
 
@@ -43,8 +36,7 @@ export default function ContactPage() {
                   <div className="space-y-1">
                      <p className="font-display font-bold text-lg text-cp-text">Visit Our Bakery</p>
                      <p className="text-sm text-cp-text-muted leading-relaxed font-body">
-                        Busia Town, Kenya <br />
-                        Opposite Victory Plaza, Kisumu Road
+                        Busia Town, Kenya
                      </p>
                   </div>
                </div>
@@ -55,17 +47,21 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-1">
                      <p className="font-display font-bold text-lg text-cp-text">Call Us</p>
-                     <p className="text-sm text-cp-text-muted font-body">+254 700 000 000</p>
+                     <p className="text-sm text-cp-text-muted font-body">
+                        <a href="tel:+254724848228" className="hover:text-cp-accent transition-colors">+254 724 848228</a>
+                     </p>
                   </div>
                </div>
 
-               <div className="flex items-center gap-6 p-8 bg-cp-surface rounded-[2rem] border border-cp-border group hover:border-cp-accent transition-all duration-300">
-                  <div className="w-14 h-14 rounded-2xl bg-cp-bg border border-cp-border flex items-center justify-center text-cp-accent shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-3">
-                     <Mail className="w-6 h-6" />
+               <div className="flex items-center gap-6 p-8 bg-cp-surface rounded-[2rem] border border-cp-border group hover:border-[#25D366]/50 transition-all duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/20 flex items-center justify-center text-[#25D366] shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-3">
+                     <MessageSquare className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
-                     <p className="font-display font-bold text-lg text-cp-text">Email Us</p>
-                     <p className="text-sm text-cp-text-muted font-body">hello@clarepastries.co.ke</p>
+                     <p className="font-display font-bold text-lg text-cp-text">WhatsApp Us</p>
+                     <p className="text-sm text-cp-text-muted font-body">
+                        <a href="https://wa.me/254724848228" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors">Chat on WhatsApp →</a>
+                     </p>
                   </div>
                </div>
             </div>
@@ -75,43 +71,50 @@ export default function ContactPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-cp-surface border border-cp-border rounded-[3.5rem] p-8 md:p-14 shadow-2xl shadow-cp-accent/5 relative overflow-hidden"
+            className="flex flex-col gap-8"
           >
-             <div className="absolute top-0 right-0 w-64 h-64 bg-cp-accent/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-             
-             <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-cp-text-muted ml-1">Your Name</label>
-                      <Input placeholder="John Doe" required className="bg-cp-bg border-cp-border focus:ring-cp-accent rounded-xl h-14" />
+             <div className="bg-cp-surface border border-cp-border rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group hover:border-cp-accent transition-colors">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-cp-accent/5 blur-2xl rounded-full" />
+                <div className="relative z-10 space-y-6 text-center">
+                   <div className="w-16 h-16 rounded-3xl bg-cp-accent/10 border border-cp-accent/20 flex items-center justify-center text-cp-accent mx-auto">
+                      <Phone className="w-8 h-8" />
                    </div>
-                   <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-cp-text-muted ml-1">Email Address</label>
-                      <Input type="email" placeholder="john@example.com" required className="bg-cp-bg border-cp-border focus:ring-cp-accent rounded-xl h-14" />
+                   <div>
+                      <h3 className="font-display font-bold text-2xl mb-2 text-cp-text">Call or WhatsApp Clare</h3>
+                      <p className="text-cp-text-muted font-body text-sm max-w-xs mx-auto mb-4">
+                         +254 724 848228
+                      </p>
+                   </div>
+                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <a href="tel:+254724848228" className="btn-primary w-full sm:w-auto px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-[#1a1a1a] text-xs">
+                         Call Now
+                      </a>
+                      <a href="https://wa.me/254724848228" target="_blank" rel="noopener noreferrer" className="bg-[#25D366]/10 text-[#128C7E] hover:bg-[#25D366] hover:text-white transition-colors w-full sm:w-auto px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs border border-[#25D366]/20 flex items-center justify-center">
+                         WhatsApp
+                      </a>
                    </div>
                 </div>
-                
-                <div className="space-y-2">
-                   <label className="text-xs font-bold uppercase tracking-widest text-cp-text-muted ml-1">Subject</label>
-                   <Input placeholder="Inquiry about a custom cake" required className="bg-cp-bg border-cp-border focus:ring-cp-accent rounded-xl h-14" />
-                </div>
+             </div>
 
-                <div className="space-y-2">
-                   <label className="text-xs font-bold uppercase tracking-widest text-cp-text-muted ml-1 flex items-center gap-2">
-                      Your Message
-                   </label>
-                   <textarea 
-                      placeholder="Tell us what's on your mind..."
-                      className="w-full bg-cp-bg border border-cp-border rounded-2xl p-6 text-sm min-h-[180px] focus:outline-none focus:ring-2 focus:ring-cp-accent transition-all font-body"
-                      required
-                   />
+             <div className="bg-cp-surface border border-cp-border rounded-[2.5rem] p-8 md:p-10 shadow-xl relative overflow-hidden group hover:border-cp-accent transition-colors">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-cp-accent/5 blur-2xl rounded-full" />
+                <div className="relative z-10 space-y-6 text-center">
+                   <div className="w-16 h-16 rounded-3xl bg-cp-accent/10 border border-cp-accent/20 flex items-center justify-center text-cp-accent mx-auto">
+                      <ShoppingBag className="w-8 h-8" />
+                   </div>
+                   <div>
+                      <h3 className="font-display font-bold text-2xl mb-2 text-cp-text">Ready to Order?</h3>
+                      <p className="text-cp-text-muted font-body text-sm max-w-xs mx-auto mb-6 leading-relaxed">
+                         Browse our menu and place your order directly online.
+                      </p>
+                   </div>
+                   <div className="flex justify-center">
+                      <a href="/menu" className="btn-primary w-full sm:w-auto px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-[#1a1a1a] text-xs transition-transform hover:-translate-y-1">
+                         Browse Menu
+                      </a>
+                   </div>
                 </div>
-
-                <Button fullWidth size="lg" className="h-16 font-bold text-lg group bg-cp-cta text-cp-cta-text hover:bg-cp-cta-hover transition-all rounded-xl shadow-lg">
-                   Send Message
-                   <Send className="ml-2 w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </Button>
-             </form>
+             </div>
           </motion.div>
         </div>
       </div>

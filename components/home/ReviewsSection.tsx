@@ -32,11 +32,11 @@ export async function ReviewsSection() {
   if (reviews.length === 0) return null;
 
   return (
-    <section className="py-24 bg-cp-bg overflow-hidden relative">
+    <section className="py-12 md:py-24 bg-cp-bg overflow-hidden relative">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="space-y-4 text-center md:text-left">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-cp-accent">
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">
               Kind Words
             </span>
             <h2 className="text-4xl md:text-6xl font-black text-cp-text leading-tight uppercase italic drop-shadow-sm">

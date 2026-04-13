@@ -18,7 +18,13 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div className="min-h-screen pt-40 pb-20 flex flex-col items-center justify-center bg-cp-bg">
+        <div className="w-8 h-8 border-4 border-cp-accent border-t-transparent rounded-full animate-spin opacity-50" />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -56,7 +62,7 @@ export default function CartPage() {
                  Your <br />
                  <span className="text-cp-accent not-italic">Selection.</span>
                </h1>
-               <p className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">
+               <p className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">
                   {getItemCount()} items currently in your journey
                </p>
             </div>
@@ -73,7 +79,7 @@ export default function CartPage() {
                       className="bg-cp-surface p-6 md:p-10 rounded-3xl flex flex-col md:flex-row items-center gap-8 md:gap-12 shadow-2xl border border-cp-border/50"
                     >
                       {/* Item Image */}
-                      <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-cp-surface-2 flex-shrink-0 shadow-inner">
+                      <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-cp-surface-2 flex-shrink-0 shadow-inner">
                         {item.imageUrl ? (
                           <Image
                             src={item.imageUrl}

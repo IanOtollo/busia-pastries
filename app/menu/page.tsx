@@ -43,7 +43,7 @@ export default async function MenuPage() {
         <div className="container mx-auto px-4 md:px-6">
            {/* Page Header */}
            <div className="max-w-4xl mx-auto text-center space-y-4 mb-20">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">Daily Selection</span>
+              <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Daily Selection</span>
               <h1 className="font-display text-6xl md:text-9xl font-black text-cp-text leading-none uppercase italic">
                  The <span className="text-cp-accent not-italic">Bakeshop.</span>
               </h1>

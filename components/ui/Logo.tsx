@@ -12,7 +12,7 @@ export function Logo({ className = "w-8 h-8", hideText = false }: { className?: 
       </div>
       {!hideText && (
         <span className="font-display text-2xl font-black tracking-tighter text-cp-text leading-none pt-1 group-hover:text-cp-accent transition-colors">
-          Clare Bakes.
+          Clare Pastries
         </span>
       )}
     </div>

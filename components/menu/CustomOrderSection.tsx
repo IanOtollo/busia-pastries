@@ -100,7 +100,7 @@ export function CustomOrderSection() {
       <div className="flex flex-col md:flex-row gap-16 items-start">
         {/* Left: Content */}
         <div className="md:w-1/3 space-y-6">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">
+          <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">
             Bespoke
           </span>
           <h2 className="text-4xl md:text-6xl font-black text-cp-text leading-[0.9] uppercase italic tracking-tighter">

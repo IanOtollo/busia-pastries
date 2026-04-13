@@ -7,7 +7,12 @@
 const PAYHERO_BASE = 'https://backend.payhero.co.ke/api/v2'
 
 function getAuthHeader(): string {
-  const username = process.env.PAYHERO_API_USERNAME
+  // PayHero gives a unified Base64 string as the API Key in their newer dashboard
+  if (process.env.PAYHERO_API_KEY) {
+    return `Basic ${process.env.PAYHERO_API_KEY}`
+  }
+
+  const username = process.env.PAYHERO_API_USERNAME || process.env.PAYHERO_API_ID
   const secret = process.env.PAYHERO_API_SECRET
   if (!username || !secret) {
     throw new Error('PayHero credentials not configured')
@@ -33,7 +38,7 @@ export async function initiateSTKPush({
   customerName: string
 }): Promise<STKPushResult> {
   const channelId = process.env.PAYHERO_CHANNEL_ID
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'
 
   if (!channelId || !appUrl) {
     console.error('[PayHero] Missing PAYHERO_CHANNEL_ID or NEXT_PUBLIC_APP_URL')

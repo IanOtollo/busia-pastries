@@ -95,8 +95,8 @@ export function Hero() {
                 transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 className="font-display font-black text-white leading-[0.85] text-[clamp(4rem,12vw,10rem)] uppercase tracking-tighter shadow-sm"
               >
-                Clare <br />
-                <span className="text-cp-accent italic lowercase font-medium tracking-normal drop-shadow-[0_0_15px_rgba(230,172,135,0.3)]">Bakes.</span>
+                Every Bite, <br />
+                <span className="text-cp-accent italic lowercase font-medium tracking-normal drop-shadow-[0_0_15px_rgba(230,172,135,0.3)]">a celebration.</span>
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -120,8 +120,8 @@ export function Hero() {
                 Reserve Yours
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
               </Link>
-              <Link href="/galore" className="text-white font-bold text-lg hover:text-cp-accent transition-colors flex items-center gap-2 group underline-offset-8 hover:underline">
-                Galore
+              <Link href="/menu" className="text-white font-bold text-lg hover:text-cp-accent transition-colors flex items-center gap-2 group underline-offset-8 hover:underline">
+                Browse the Menu
                 <motion.span animate={{ x: [0, 3, 0] }} transition={{ repeat: Infinity, duration: 2 }}>→</motion.span>
               </Link>
             </motion.div>

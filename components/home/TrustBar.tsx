@@ -5,7 +5,7 @@ const TRUST_ITEMS = [
   { icon: Flame, text: "Baked Fresh Daily" },
   { icon: Truck, text: "Delivered in Busia Town" },
   { icon: Smartphone, text: "M-Pesa Express Checkout" },
-  { icon: Phone, text: "WhatsApp: +254 724 848228" },
+  { icon: Phone, text: "+254 724 848228", href: "tel:+254724848228" },
 ];
 
 export function TrustBar() {
@@ -18,9 +18,15 @@ export function TrustBar() {
               <div className="w-12 h-12 rounded-2xl bg-cp-surface flex items-center justify-center text-cp-accent border border-cp-border shadow-sm group-hover:scale-110 transition-transform">
                 <item.icon className="w-6 h-6" />
               </div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cp-text italic">
-                {item.text}
-              </span>
+              {item.href ? (
+                <a href={item.href} className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cp-text italic hover:text-cp-accent">
+                  {item.text}
+                </a>
+              ) : (
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cp-text italic">
+                  {item.text}
+                </span>
+              )}
             </div>
           ))}
         </div>

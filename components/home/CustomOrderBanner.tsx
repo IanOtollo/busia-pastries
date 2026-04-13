@@ -24,7 +24,7 @@ export function CustomOrderBanner() {
   }, []);
 
   return (
-    <section className="relative py-24 overflow-hidden bg-cp-bg">
+    <section className="relative py-12 md:py-24 overflow-hidden bg-cp-bg">
       <div className="container mx-auto px-4 md:px-6">
         <div className="relative rounded-[3rem] overflow-hidden bg-cp-cta px-8 py-20 md:px-16 md:py-32 text-center shadow-2xl border border-white/10">
           {/* Slideshow Background */}
@@ -67,7 +67,7 @@ export function CustomOrderBanner() {
               <span className="text-cp-accent not-italic drop-shadow-xl">Unique.</span>
             </h2>
             <p className="text-cp-cta-text opacity-90 text-lg md:text-2xl font-body leading-relaxed max-w-2xl mx-auto italic">
-              "Design your custom cake or pastry — tell us exactly what you want and we&apos;ll make it happen. Clare handles every bespoke order with personalized care and immense love."
+              Design your custom cake or pastry — tell us exactly what you want and we&apos;ll make it happen. Clare handles every bespoke order with personalized care and immense love.
             </p>
             <div className="pt-8">
               <Link 

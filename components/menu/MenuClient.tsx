@@ -26,6 +26,9 @@ interface MenuClientProps {
 export function MenuClient({ initialProducts }: MenuClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("featured");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const CATEGORIES = ["All", "Cakes", "Pastries", "Breads", "Seasonal"];
 
   const filteredProducts = useMemo(() => {
     let results = [...initialProducts];
@@ -41,6 +44,11 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
       );
     }
 
+    // Filter by Category
+    if (activeCategory !== "All") {
+      results = results.filter((p) => p.category === activeCategory);
+    }
+
     // Sorting
     if (sortBy === "price-low") {
       results.sort((a, b) => a.priceKes - b.priceKes);
@@ -52,49 +60,69 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
     results.sort((a, b) => (a.inStock === b.inStock ? 0 : a.inStock ? -1 : 1));
 
     return results;
-  }, [initialProducts, searchQuery, sortBy]);
+  }, [initialProducts, searchQuery, sortBy, activeCategory]);
 
   return (
     <div className="space-y-12">
       {/* Search & Filters Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 py-6 border-y border-cp-border/50 sticky top-20 z-30 bg-cp-bg/80 backdrop-blur-md">
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent">Collective Menu</span>
-          <h2 className="text-2xl font-black text-cp-text uppercase italic">The Full <span className="text-cp-accent not-italic">Selection.</span></h2>
+      <div className="flex flex-col gap-6 py-6 border-y border-cp-border/50 sticky top-20 z-30 bg-cp-bg/80 backdrop-blur-md">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Collective Menu</span>
+            <h2 className="text-2xl font-black text-cp-text uppercase italic">The Full <span className="text-cp-accent not-italic">Selection.</span></h2>
+          </div>
+
+          {/* Search & Sort */}
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="relative w-full sm:w-64 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted group-focus-within:text-cp-accent transition-colors" />
+              <input
+                type="text"
+                placeholder="Search bakes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-cp-surface border border-cp-border rounded-md pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cp-accent transition-all"
+              />
+            </div>
+
+            <div className="relative w-full sm:w-48 group">
+              <SlidersHorizontal className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full bg-cp-surface border border-cp-border rounded-md pl-11 pr-8 py-2.5 text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-cp-accent transition-all cursor-pointer"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low-High</option>
+                <option value="price-high">Price: High-Low</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted pointer-events-none" />
+            </div>
+          </div>
         </div>
 
-        {/* Search & Sort */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="relative w-full sm:w-64 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted group-focus-within:text-cp-accent transition-colors" />
-            <input
-              type="text"
-              placeholder="Search bakes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-cp-surface border border-cp-border rounded-md pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cp-accent transition-all"
-            />
-          </div>
-
-          <div className="relative w-full sm:w-48 group">
-            <SlidersHorizontal className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full bg-cp-surface border border-cp-border rounded-md pl-11 pr-8 py-2.5 text-sm appearance-none focus:outline-none focus:ring-1 focus:ring-cp-accent transition-all cursor-pointer"
+        {/* Category Filters */}
+        <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all border",
+                activeCategory === cat 
+                  ? "bg-cp-text text-cp-bg border-cp-text"
+                  : "bg-transparent text-cp-text border-cp-border hover:border-cp-accent hover:text-cp-accent"
+              )}
             >
-              <option value="featured">Featured</option>
-              <option value="price-low">Price: Low-High</option>
-              <option value="price-high">Price: High-Low</option>
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-cp-text-muted pointer-events-none" />
-          </div>
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Results Count */}
       <div className="flex justify-between items-center">
-         <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cp-text-muted">
+         <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">
             {filteredProducts.length} items found
          </span>
       </div>
@@ -124,7 +152,7 @@ export function MenuClient({ initialProducts }: MenuClientProps) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-32 text-center space-y-6 max-w-md mx-auto"
+              className="flex flex-col items-center justify-center py-16 md:py-32 text-center space-y-6 max-w-md mx-auto"
             >
               <div className="w-20 h-20 bg-cp-accent/5 rounded-full flex items-center justify-center text-cp-accent border border-cp-accent/20">
                 <Sparkles className="w-8 h-8 animate-pulse" />

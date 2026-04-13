@@ -13,7 +13,9 @@ import { cn } from "@/lib/utils/cn";
 
 
 const NAV_LINKS = [
-  { name: "Galore", href: "/galore" },
+  { name: "Home", href: "/" },
+  { name: "Menu", href: "/menu" },
+  { name: "Gallery", href: "/galore" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -60,16 +62,6 @@ export function Navbar({ settings }: { settings: { phone: string } }) {
 
             {/* Center: Desktop Links */}
             <div className="hidden md:flex items-center gap-8 lg:gap-12">
-              <Link
-                href="/menu"
-                className={cn(
-                  "text-sm font-semibold tracking-wide transition-colors hover:text-cp-accent",
-                  pathname === "/menu" ? "text-cp-accent" : "text-cp-text"
-                )}
-              >
-                Menu
-              </Link>
-
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.name}
@@ -136,25 +128,18 @@ export function Navbar({ settings }: { settings: { phone: string } }) {
             exit={{ opacity: 0, scale: 0.95 }}
             className="fixed inset-0 z-40 bg-cp-bg flex flex-col pt-32 px-8 pb-12 overflow-y-auto"
           >
-            <div className="flex flex-col gap-6">
-              <div className="space-y-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Our Pastries</span>
-                <Link
-                  href="/menu"
-                  className="flex items-center justify-between py-2 border-b border-cp-border/30"
-                >
-                  <span className="font-display text-4xl font-semibold">Menu</span>
-                  <ChevronRight className="w-8 h-8 text-cp-accent" />
-                </Link>
-              </div>
-
-              <div className="space-y-4 mt-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cp-accent">Explore</span>
+            <div className="flex flex-col gap-8">
+              <div className="space-y-6 mt-4">
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent">Navigation</span>
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="block font-display text-4xl font-bold hover:text-cp-accent transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={cn(
+                      "block font-display text-4xl font-bold transition-colors",
+                      pathname === link.href ? "text-cp-accent" : "text-cp-text hover:text-cp-accent"
+                    )}
                   >
                     {link.name}
                   </Link>
@@ -193,11 +178,17 @@ export function Navbar({ settings }: { settings: { phone: string } }) {
 
               <div className="space-y-3">
                  <span className="block text-[10px] font-bold uppercase tracking-widest text-cp-text-muted">Direct with Clare</span>
-                 <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="flex items-center gap-4 text-xl font-bold bg-cp-surface p-4 rounded-2xl border border-cp-border shadow-sm">
+                 <a href={`tel:${settings.phone.replace(/\s+/g, '')}`} className="flex items-center gap-4 text-lg font-bold bg-cp-surface p-4 rounded-2xl border border-cp-border shadow-sm hover:border-cp-accent transition-colors">
                     <div className="w-10 h-10 bg-cp-accent/10 rounded-full flex items-center justify-center text-cp-accent">
                        <Phone className="w-5 h-5" />
                     </div>
                     {settings.phone}
+                 </a>
+                 <a href={`https://wa.me/${settings.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-bold bg-[#25D366]/10 p-4 rounded-2xl border border-[#25D366]/20 shadow-sm hover:border-[#25D366] transition-colors text-[#128C7E]">
+                    <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white">
+                       <Phone className="w-5 h-5" />
+                    </div>
+                    WhatsApp Clare
                  </a>
               </div>
             </div>

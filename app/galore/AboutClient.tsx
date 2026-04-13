@@ -36,9 +36,9 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
                  <span className="text-cp-accent italic lowercase font-medium">into every bite.</span>
               </h1>
               <p className="text-cp-text-muted text-lg md:text-xl leading-relaxed max-w-xl font-body">
-                 What started as a small home kitchen project in Busia has evolved into **Clare Pastries** — the region&apos;s 
-                 preeminent artisanal bakery. We believe in the power of fresh ingredients, 
-                 traditional techniques, and a touch of genuine Kenyan warmth.
+                 <strong className="text-cp-text font-bold">Clare Pastries</strong> is a homegrown artisan bakery in the heart of Busia Town, Kenya. 
+                 Every product is made to order — fresh, never frozen, never mass-produced. 
+                 Just honest baking, done with love.
               </p>
            </motion.div>
            
@@ -54,7 +54,7 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
       </section>
 
       {/* Values */}
-      <section className="bg-cp-surface py-32 border-y border-cp-border">
+      <section className="bg-cp-surface py-16 md:py-32 border-y border-cp-border">
          <div className="container mx-auto px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
                <h2 className="font-display text-4xl md:text-6xl font-black text-cp-text tracking-tight uppercase">The Pillars of Our Craft</h2>
@@ -68,8 +68,7 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
                   </div>
                   <h3 className="text-2xl font-bold text-cp-text tracking-tight">Premium Sourcing</h3>
                   <p className="text-sm text-cp-text-muted leading-relaxed font-body">
-                     We source our flour and dairy directly from local partners in Western Kenya, 
-                     ensuring every pastry is as fresh as it is flavorful.
+                     Every bake starts with carefully selected local ingredients.
                   </p>
                </div>
 
@@ -77,10 +76,9 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
                   <div className="w-16 h-16 rounded-2xl bg-cp-surface-2 flex items-center justify-center text-cp-accent transition-transform group-hover:scale-110 group-hover:rotate-6">
                      <Heart className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold text-cp-text tracking-tight">Handcrafted Love</h3>
+                  <h3 className="text-2xl font-bold text-cp-text tracking-tight">Handcrafted with Love</h3>
                   <p className="text-sm text-cp-text-muted leading-relaxed font-body">
-                     Baking is an art of patience. Every loaf of bread and custom cake is 
-                     hand-tailored by Clare and her dedicated team of local bakers.
+                     No shortcuts. Every item shaped by hand, made to order.
                   </p>
                </div>
 
@@ -88,37 +86,16 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
                   <div className="w-16 h-16 rounded-2xl bg-cp-surface-2 flex items-center justify-center text-cp-accent transition-transform group-hover:scale-110 group-hover:rotate-6">
                      <Users className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold text-cp-text tracking-tight">Community First</h3>
+                  <h3 className="text-2xl font-bold text-cp-text tracking-tight">Fresh Daily</h3>
                   <p className="text-sm text-cp-text-muted leading-relaxed font-body">
-                     Clare Pastries is proud to support local schools and community centers through 
-                     our monthly give-back program, sharing the sweetness of our success.
+                     We bake every morning. Nothing sits on a shelf overnight.
                   </p>
                </div>
             </div>
          </div>
       </section>
 
-      {/* Stats */}
-      <section className="container mx-auto px-4 md:px-6 py-12">
-         <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
-            <div className="text-center space-y-2 group">
-               <p className="text-5xl md:text-6xl font-display font-black text-cp-accent group-hover:scale-110 transition-transform">50k+</p>
-               <p className="text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.3em]">Cakes Delivered</p>
-            </div>
-            <div className="text-center space-y-2 group">
-               <p className="text-5xl md:text-6xl font-display font-black text-cp-accent group-hover:scale-110 transition-transform">12</p>
-               <p className="text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.3em]">Local Artisans</p>
-            </div>
-            <div className="text-center space-y-2 group">
-               <p className="text-5xl md:text-6xl font-display font-black text-cp-accent group-hover:scale-110 transition-transform">4.9</p>
-               <p className="text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.3em]">Average Rating</p>
-            </div>
-            <div className="text-center space-y-2 group">
-               <p className="text-5xl md:text-6xl font-display font-black text-cp-accent group-hover:scale-110 transition-transform">100%</p>
-               <p className="text-[10px] font-bold text-cp-text-muted uppercase tracking-[0.3em]">Freshness</p>
-            </div>
-         </div>
-      </section>
+
 
       {/* Founder Quote */}
       <section className="container mx-auto px-4 md:px-6">
@@ -131,8 +108,7 @@ export function AboutClient({ galleryImages }: AboutClientProps) {
                   and everyday delight for the heart of Busia.&quot;
                </blockquote>
                <div className="pt-6">
-                  <p className="font-display text-2xl font-bold text-cp-accent italic">Clare Aswani</p>
-                  <p className="text-[10px] opacity-60 uppercase font-bold tracking-[0.4em] mt-2">Founder & Head Baker</p>
+                  <p className="font-display text-2xl font-bold text-cp-accent italic">— Clare</p>
                </div>
             </div>
          </div>

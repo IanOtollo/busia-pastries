@@ -17,7 +17,7 @@ function getRatelimiter() {
   });
 }
 
-const kenyaPhoneRegex = /^2547\d{8}$/
+const kenyaPhoneRegex = /^254[17]\d{8}$/
 const ugandaPhoneRegex = /^2567\d{8}$/
 
 const schema = z.object({
@@ -58,7 +58,18 @@ export async function POST(req: Request) {
     )
   }
 
-  const { phone, orderId } = parsed.data
+  let { phone, orderId } = parsed.data
+
+  // Normalize phone format
+  // Strip any spaces, dashes, or plus signs
+  phone = phone.replace(/[\s\-+]/g, '')
+  
+  // Convert 07... and 01... to 254... (assuming Kenya default for local numbers)
+  if (phone.startsWith('07') || phone.startsWith('01')) {
+    if (phone.length === 10) {
+      phone = '254' + phone.substring(1)
+    }
+  }
 
   // Validate phone format
   if (!kenyaPhoneRegex.test(phone) && !ugandaPhoneRegex.test(phone)) {

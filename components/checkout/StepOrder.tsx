@@ -72,7 +72,7 @@ export function StepOrder({ data, updateData, onNext }: StepOrderProps) {
       {data.fulfillment === "DELIVERY" ? (
         <div className="space-y-8 pt-12 border-t border-cp-border animate-in slide-in-from-top-6 duration-700">
           <div className="space-y-6">
-            <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-cp-accent flex items-center gap-3">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-[0.15em] text-cp-accent flex items-center gap-3">
                <MapPin className="w-4 h-4" />
                Delivery Location
             </h3>
