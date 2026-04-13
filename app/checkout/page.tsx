@@ -43,7 +43,7 @@ export default function CheckoutPage() {
     }
   }, [items, step, router]);
 
-  if (!mounted || items.length === 0 && step < 5) return null;
+  if (!mounted || (items.length === 0 && step < 5)) return null;
 
   const nextStep = () => setStep((s) => Math.min(s + 1, 5));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
